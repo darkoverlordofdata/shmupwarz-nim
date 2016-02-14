@@ -1,6 +1,6 @@
 # Schmup Warz
 
-Once more, with Nim!
+One more time, with Nim!
 
 
 # MIT License

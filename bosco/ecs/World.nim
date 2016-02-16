@@ -1,3 +1,8 @@
+proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): World =
+  new(result)
+  result.constructor(componentsEnum, startCreationIndex)
+
+## Getters
 proc count*(this : World) : int = this.entities.len
 proc reusableEntitiesCount*(this : World) : int = this.reusableEntities.len
 proc retainedEntitiesCount*(this : World) : int = this.retainedEntities.len
@@ -108,7 +113,3 @@ proc initialize*(this: World) : void =
 proc execute*(this: World) : void =
   for sys in this.executeSystems:
     sys.execute()
-
-proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): World =
-  new(result)
-  result.constructor(componentsEnum, startCreationIndex)

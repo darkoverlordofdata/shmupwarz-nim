@@ -1,24 +1,18 @@
+proc newEntity*(componentsEnum : seq[string], totalComponents : int = 32): Entity =
+  new(result)
+  result.constructor(componentsEnum, totalComponents)
+
 proc constructor*(this: Entity, componentsEnum : seq[string], totalComponents : int = 32): void =
   this.totalComponents = totalComponents
   this.componentCount = componentsEnum.len
   this.componentsEnum = componentsEnum
 
-proc addRef(this: Entity) : void =
-  this.refCount += 1
-
-proc release(this: Entity) : void =
-  this.refCount -= 1
-  if this.refCount == 0:
-    this.owner.onEntityReleased(this)
-  elif this.refCount < 0:
-    raise newException(OSError, "EntityIsAlreadyReleasedException")
-  return
-
-proc initialize*(this: Entity, owner : World, name : string, id : string, creationIndex : int): void =
+proc initialize*(this: Entity, owner : World, name : string, uuid : string, creationIndex : int): void =
   this.owner = owner
   this.name = name
-  #this.id = id
+  this.uuid = uuid
   this.creationIndex = creationIndex
+  this.isEnabled = true
   this.addRef()
 
 proc hasComponent*(this: Entity, index : int) : bool =
@@ -119,20 +113,21 @@ proc destroy*(this: Entity) : void =
   this.removeAllComponents()
   this.isEnabled = false
 
-proc toString*(this: Entity) : string =
-  if this.toStringCache == nil:
-    var sb = ""
-    var seperator = ", "
-
-    var components = this.getComponentIndices()
-    var lastSeperator = components.len - 1
-    for i in 0..lastSeperator:
-      sb = sb & this.componentsEnum[components[i]]
-      if i < lastSeperator:
-        sb = sb & seperator
-    this.toStringCache = sb
+proc `$`*(this: Entity) : string =
+  if this.toStringCache == "":
+    var sb : seq[string] = @[]
+    for index in this.getComponentIndices():
+      sb.add $WorldComponentsEnum[index]
+    this.toStringCache = this.name & "(" & sb.join(", ") & ")"
   return this.toStringCache
 
-proc newEntity*(componentsEnum : seq[string], totalComponents : int = 32): Entity =
-  new(result)
-  result.constructor(componentsEnum, totalComponents)
+proc addRef(this: Entity) : void =
+  this.refCount += 1
+
+proc release(this: Entity) : void =
+  this.refCount -= 1
+  if this.refCount == 0:
+    this.owner.onEntityReleased(this)
+  elif this.refCount < 0:
+    raise newException(OSError, "EntityIsAlreadyReleasedException")
+  return

@@ -1,24 +1,28 @@
 import strfmt
+import strutils
 import lists
 import tables
 import sets
 import queues
+import sequtils
 import nuuid
 
 const MAX_COMPONENTS = 31
 
-type GroupEventType = enum
-  OnEntityAdded
-  OnEntityRemoved
-  OnEntityAddedOrRemoved
-
 type
+  ##
+  ## Base Component
+  ##
   IComponent* = ref object of RootObj
+  ##
+  ## Entity - members
+  ##
   Entity* = ref object of RootObj
     owner : World
     creationIndex* : int
     name*: string
     id*: int
+    uuid*: string
     isEnabled* : bool
     refCount : int
     toStringCache : string
@@ -28,6 +32,9 @@ type
     components : array[0..MAX_COMPONENTS, IComponent]
     componentsCache : seq[IComponent]
     componentIndicesCache : seq[int]
+  ##
+  ## Matcher - members
+  ##
   Matcher* = ref object of RootObj
     id*: int
     allOfIndices* : seq[int]
@@ -35,12 +42,18 @@ type
     noneOfIndices* : seq[int]
     indicesCache : seq[int]
     toStringCache : string
+  ##
+  ## Group - members
+  ##
   Group* = ref object of RootObj
     matcher* : Matcher
     entities* : Table[int,Entity]
     entitiesCache: seq[Entity]
     singleEntityCache: Entity
     toStringCache : string
+  ##
+  ## World - members
+  ##
   World* = ref object of RootObj
     name* : string
     totalComponents* : int
@@ -54,6 +67,9 @@ type
     entitiesCache : seq[Entity]
     initializeSystems : seq[System]
     executeSystems : seq[System]
+  ##
+  ## System - members
+  ##
   System* = ref object of RootObj
     world : World
 
@@ -66,7 +82,7 @@ var
   WorldTotalComponents : int
 
 ##
-## Entity
+## Entity - method forward declarations
 ##
 proc newEntity*(componentsEnum : seq[string], totalComponents : int = 32): Entity
 proc constructor*(this: Entity, componentsEnum : seq[string], totalComponents : int = 32): void
@@ -79,30 +95,28 @@ proc getComponents*(this: Entity) : seq[IComponent]
 proc hasComponent*(this: Entity, index : int) : bool
 proc hasComponents*(this: Entity, indices : seq[int]) : bool
 proc hasAnyComponent*(this: Entity, indices : seq[int]) : bool
-proc initialize*(this: Entity, owner : World, name : string, id : string, creationIndex : int): void
+proc initialize*(this: Entity, owner : World, name : string, uuid : string, creationIndex : int): void
 proc release(this: Entity) : void
 proc removeAllComponents*(this: Entity) : void
 proc removeComponent*(this: Entity, index : int) : Entity
 proc replaceComponent*(this: Entity, index : int, component : IComponent) : Entity
-proc toString*(this: Entity) : string
+proc `$`*(this: Entity) : string
 
 ##
-## Matcher
+## Matcher - method forward declarations
 ##
-proc MatcherDistinctIndices(indices : seq[int]) : seq[int]
-proc MatcherMerge(matchers : seq[Matcher]) : seq[int]
-proc MatcherAllOf*(args : seq[int]) : Matcher
-proc MatcherAnyOf*(args : seq[int]) : Matcher
+proc MatchAllOf*(args : seq[int]) : Matcher
+proc MatchAnyOf*(args : seq[int]) : Matcher
+proc newMatcher*() : Matcher
 proc constructor*(this: Matcher): void
 proc anyOf*(this: Matcher, args : seq[int]) : Matcher
 proc indices*(this: Matcher) : seq[int]
 proc matches*(this: Matcher, entity : Entity) : bool
-proc mergeIndices*(this: Matcher) : seq[int]
 proc noneOf*(this: Matcher, args : seq[int]) : Matcher
-proc toString*(this : Matcher) : string
+proc `$`*(this : Matcher) : string
 
 ##
-## Group
+## Group - method forward declarations
 ##
 proc newGroup*(matcher : Matcher): Group
 proc constructor*(this : Group, matcher : Matcher): void
@@ -116,10 +130,10 @@ proc handleEntity(this : Group, entity : Entity, index : int, component : ICompo
 proc handleEntitySilently(this : Group, entity : Entity): void
 proc removeEntity(this : Group, entity : Entity, index : int, component : IComponent): void
 proc removeEntitySilently(this : Group, entity : Entity): void
-proc toString(this : Group) : string
+proc `$`(this : Group) : string
 
 ##
-## World
+## World - method forward declarations
 ##
 proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): World
 proc constructor*(this: World, componentsEnum : seq[string], startCreationIndex : int = 0): void
@@ -139,7 +153,7 @@ proc onEntityChanged*(this: World, entity : Entity, index : int, component : ICo
 proc onEntityReleased*(this: World, entity : Entity) : void
 
 ##
-## System
+## System - methods
 ##
 method setWorld*(this : System, world : World) : void {.base.} =
   this.world = world

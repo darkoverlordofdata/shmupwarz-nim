@@ -1,6 +1,8 @@
+proc newGroup*(matcher : Matcher): Group =
+  new(result)
+  result.constructor(matcher)
 
-proc count*(this : Group) : int =
-  return this.entities.len
+proc count*(this : Group) : int = return this.entities.len
 
 proc constructor*(this : Group, matcher : Matcher): void =
   this.entities = initTable[int, Entity]()
@@ -71,14 +73,10 @@ proc getSingleEntity(this : Group) : Entity =
       raise newException(OSError, interp"SingleEntityException {this.matcher.toString()}")
   return this.singleEntityCache
 
-proc toString(this : Group) : string =
+proc `$`(this : Group) : string =
   if this.toStringCache == nil:
-    var sb = ""
-    for i in 0..this.matcher.indices.len-1:
-        sb = sb & "" #World.componentsEnum[index].replace("Component", "")
-    this.toStringCache = "Group(" & sb & ")"
+    var sb : seq[string] = @[]
+    for index in this.matcher.indices:
+        sb.add WorldComponentsEnum[index] #.replace("Component", "")
+    this.toStringCache =  "Group(" & sb.join(",") & ")"
   return this.toStringCache
-
-proc newGroup*(matcher : Matcher): Group =
-  new(result)
-  result.constructor(matcher)

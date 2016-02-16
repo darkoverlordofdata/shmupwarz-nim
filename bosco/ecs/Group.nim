@@ -5,9 +5,6 @@ proc count*(this : Group) : int =
 proc constructor*(this : Group, matcher : Matcher): void =
   this.entities = initTable[int, Entity]()
   this.entitiesCache = @[]
-  this.onEntityAdded = initEventHandler("EntityAdded")
-  this.onEntityRemoved = initEventHandler("EntityRemoved")
-  this.onEntityUpdated = initEventHandler("EntityReleased")
   this.matcher = matcher
   return
 
@@ -31,18 +28,12 @@ proc addEntity(this : Group, entity : Entity, index : int, component : IComponen
     this.entitiesCache = nil
     this.singleEntityCache = nil
     entity.addRef()
-    var args: EventArgs
-    ecsEvents.emit(this.onEntityAdded, args)
-    # this.onEntityAdded.dispatch(this, entity, index, component)
 
 proc removeEntity(this : Group, entity : Entity, index : int, component : IComponent): void =
   if this.entities.hasKey(entity.id):
     this.entities.del(entity.id)
     this.entitiesCache = nil
     this.singleEntityCache = nil
-    var args: EventArgs
-    ecsEvents.emit(this.onEntityRemoved, args)
-    # this.onEntityRemoved.dispatch(this, entity, index, component)
     entity.release()
 
 proc handleEntitySilently(this : Group, entity : Entity): void =
@@ -56,16 +47,6 @@ proc handleEntity(this : Group, entity : Entity, index : int, component : ICompo
     this.addEntity(entity, index, component)
   else:
     this.removeEntity(entity, index, component)
-
-proc updateEntity(this : Group, entity : Entity, index : int, previousComponent : IComponent, newComponent : IComponent): void =
-  if this.entities.hasKey(entity.id):
-    var args: EventArgs
-    ecsEvents.emit(this.onEntityRemoved, args)
-    ecsEvents.emit(this.onEntityAdded, args)
-    ecsEvents.emit(this.onEntityUpdated, args)
-    # this.onEntityRemoved.dispatch(this, entity, index, previousComponent)
-    # this.onEntityAdded.dispatch(this, entity, index, newComponent)
-    # this.onEntityUpdated.dispatch(this, entity, index, previousComponent, newComponent)
 
 proc containsEntity(this : Group, entity : Entity) : bool =
   return this.entities.hasKey(entity.id)

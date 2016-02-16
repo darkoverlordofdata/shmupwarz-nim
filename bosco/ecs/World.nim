@@ -4,10 +4,6 @@ proc retainedEntitiesCount*(this : World) : int = this.retainedEntities.len
 
 
 proc constructor*(this: World, componentsEnum : seq[string], startCreationIndex : int = 0): void =
-  this.onGroupCreated = initEventHandler("GroupCreated")
-  this.onEntityCreated = initEventHandler("EntityCreated")
-  this.onEntityDestroyed = initEventHandler("EntityDestroyed")
-  this.onEntityWillBeDestroyed = initEventHandler("EntityWillBeDestroyed")
 
   this.componentsEnum = componentsEnum
   this.totalComponents = componentsEnum.len
@@ -25,27 +21,19 @@ proc constructor*(this: World, componentsEnum : seq[string], startCreationIndex 
   WorldTotalComponents = componentsEnum.len
   WorldInstance = this
 
-proc onEntityReleased*(this: World, entity : Entity) : void =
+proc onEntityReleased*(this: World, entity : Entity) : void  =
   if entity.isEnabled:
     raise newException(OSError, "EntityIsNotDestroyedException -Cannot release entity.")
 
-  # entity.onEntityReleased.removeHandler(onEntityReleased)
   this.retainedEntities.del(entity.id)
   this.reusableEntities.enqueue(entity)
 
-proc updateGroupsComponentAddedOrRemoved*(this: World, entity : Entity, index : int, component : IComponent) : void =
+proc onEntityChanged*(this: World, entity : Entity, index : int, component : IComponent) : void =
   if index+1 <= this.groupsForIndex.len:
     var groups = this.groupsForIndex[index]
     if groups != nil:
       for group in groups:
         group.handleEntity(entity, index, component)
-
-proc updateGroupsComponentReplaced*(this: World, entity : Entity, index : int, component : IComponent, newComponent : IComponent) : void =
-  if index+1 <= this.groupsForIndex.len:
-    var groups = this.groupsForIndex[index]
-    if groups != nil:
-      for group in groups:
-        group.updateEntity(entity, index, component, newComponent)
 
 proc destroyEntity*(this: World, entity : Entity): void =
   if not this.entities.hasKey(entity.id):
@@ -53,37 +41,19 @@ proc destroyEntity*(this: World, entity : Entity): void =
 
   this.entities.del(entity.id)
   this.entitiesCache = nil
-  var args: EventArgs
-  ecsEvents.emit(this.onEntityWillBeDestroyed, args)
-  # this.onEntityWillBeDestroyed.dispatch(this, entity)
   entity.destroy()
-
-  # var args: EventArgs
-  ecsEvents.emit(this.onEntityDestroyed, args)
-  # this.onEntityDestroyed.dispatch(this, entity)
-
   if entity.refCount == 1:
-    # entity.onEntityReleased.removeHandler(this.onEntityReleased)
     this.reusableEntities.add(entity)
   else:
     this.retainedEntities[entity.id] = entity
-
   entity.release()
 
 proc createEntity*(this: World, name : string): Entity =
   var entity = if this.reusableEntities.len > 0 : this.reusableEntities.dequeue() else : newEntity(this.componentsEnum, this.totalComponents)
   this.creationIndex+=1
-  entity.initialize(name, generateUUID(), this.creationIndex)
+  entity.initialize(this, name, generateUUID(), this.creationIndex)
   this.entities[entity.id] = entity
   this.entitiesCache = nil
-  # entity.onComponentAdded.addHandler(updateGroupsComponentAddedOrRemoved)
-  # entity.onComponentRemoved.addHandler(updateGroupsComponentAddedOrRemoved)
-  # entity.onComponentReplaced.addHandler(this.updateGroupsComponentReplaced)
-  # entity.onEntityReleased.addHandler(onEntityReleased)
-
-  var args: EventArgs
-  ecsEvents.emit(this.onEntityCreated, args)
-  # onEntityCreated.dispatch((World)this, entity)
   return entity
 
 proc getEntities*(this: World, matcher : Matcher) : seq[Entity] =
@@ -116,9 +86,6 @@ proc getGroup*(this: World, matcher : Matcher) : Group  =
         this.groupsForIndex[index] = @[]
       this.groupsForIndex[index].add(group)
 
-    var args: EventArgs
-    ecsEvents.emit(this.onGroupCreated, args)
-    # this.onGroupCreated.dispatch((World)this, group)
   return group
 
 proc destroyAllEntities*(this: World): void =
@@ -130,13 +97,18 @@ proc hasEntity*(this: World, entity : Entity): bool =
   return this.entities.hasKey(entity.id)
 
 proc add*(this: World, system : System) : void =
+  system.setWorld(this)
   this.initializeSystems.add(system)
   this.executeSystems.add(system)
 
 proc initialize*(this: World) : void =
   for sys in this.initializeSystems:
-    sys.initialize(this)
+    sys.initialize()
 
 proc execute*(this: World) : void =
   for sys in this.executeSystems:
-    sys.execute(this)
+    sys.execute()
+
+proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): World =
+  new(result)
+  result.constructor(componentsEnum, startCreationIndex)

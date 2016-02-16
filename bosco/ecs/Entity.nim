@@ -2,11 +2,6 @@ proc constructor*(this: Entity, componentsEnum : seq[string], totalComponents : 
   this.totalComponents = totalComponents
   this.componentCount = componentsEnum.len
   this.componentsEnum = componentsEnum
-  #this.world = World.instance
-  this.onEntityReleased = initEventHandler("EntityReleased")
-  this.onComponentAdded = initEventHandler("ComponentAdded")
-  this.onComponentRemoved = initEventHandler("ComponentRemoved")
-  this.onComponentReplaced = initEventHandler("ComponentReplaced")
 
 proc addRef(this: Entity) : void =
   this.refCount += 1
@@ -14,13 +9,13 @@ proc addRef(this: Entity) : void =
 proc release(this: Entity) : void =
   this.refCount -= 1
   if this.refCount == 0:
-    var args: EventArgs
-    ecsEvents.emit(this.onEntityReleased, args)
+    this.owner.onEntityReleased(this)
   elif this.refCount < 0:
     raise newException(OSError, "EntityIsAlreadyReleasedException")
   return
 
-proc initialize*(this: Entity, name : string, id : string, creationIndex : int): void =
+proc initialize*(this: Entity, owner : World, name : string, id : string, creationIndex : int): void =
+  this.owner = owner
   this.name = name
   #this.id = id
   this.creationIndex = creationIndex
@@ -38,32 +33,20 @@ proc addComponent*(this: Entity, index : int, component : IComponent) : Entity =
   this.componentsCache = nil
   this.componentIndicesCache = nil
   this.toStringCache = ""
-  # onComponentAdded.dispatch(this, index, component)
-  var args: EventArgs
-  ecsEvents.emit(this.onComponentAdded, args)
+  this.owner.onEntityChanged(this, index, component)
   return this
 
 proc ReplaceComponent(this: Entity, index : int, replacement : IComponent) : void =
   var previousComponent = this.components[index]
-  if previousComponent == replacement:
-    var args: EventArgs
-    ecsEvents.emit(this.onComponentReplaced, args)
-    #_onComponentReplaced.dispatch((Entity)this, index, previousComponent, replacement)
-  else:
+  if previousComponent != replacement:
     this.components[index] = replacement
     this.componentsCache = nil
     if replacement == nil:
         this.components[index] = nil
         this.componentIndicesCache = nil
         this.toStringCache = ""
-        var args: EventArgs
-        ecsEvents.emit(this.onComponentRemoved, args)
-        #_onComponentRemoved.dispatch((Entity)this, index, previousComponent)
+        this.owner.onEntityChanged(this, index, previousComponent)
 
-    else:
-      var args: EventArgs
-      ecsEvents.emit(this.onComponentReplaced, args)
-      # _onComponentReplaced.dispatch((Entity)this, index, previousComponent, replacement)
   return
 
 proc removeComponent*(this: Entity, index : int) : Entity =
@@ -134,9 +117,6 @@ proc removeAllComponents*(this: Entity) : void =
 
 proc destroy*(this: Entity) : void =
   this.removeAllComponents()
-  this.onComponentAdded.clearHandlers()
-  this.onComponentReplaced.clearHandlers()
-  this.onComponentRemoved.clearHandlers()
   this.isEnabled = false
 
 proc toString*(this: Entity) : string =

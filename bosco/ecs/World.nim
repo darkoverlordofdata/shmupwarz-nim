@@ -1,3 +1,21 @@
+##
+## World - method forward declarations
+##
+proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): World
+proc constructor*(this: World, componentsEnum : seq[string], startCreationIndex : int = 0): void
+proc add*(this: World, system : System) : void
+proc count*(this : World) : int
+proc createEntity*(this: World, name : string): Entity
+proc destroyAllEntities*(this: World): void
+proc destroyEntity*(this: World, entity : Entity): void
+proc execute*(this: World) : void
+proc getGroup*(this: World, matcher : Matcher) : Group
+proc getEntities*(this: World, matcher : Matcher) : seq[Entity]
+proc hasEntity*(this: World, entity : Entity): bool
+proc initialize*(this: World) : void
+proc reusableEntitiesCount*(this : World) : int
+proc retainedEntitiesCount*(this : World) : int
+
 proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): World =
   new(result)
   result.constructor(componentsEnum, startCreationIndex)
@@ -54,7 +72,7 @@ proc destroyEntity*(this: World, entity : Entity): void =
   entity.release()
 
 proc createEntity*(this: World, name : string): Entity =
-  var entity = if this.reusableEntities.len > 0 : this.reusableEntities.dequeue() else : newEntity(this.componentsEnum, this.totalComponents)
+  var entity = if this.reusableEntities.len > 0 : this.reusableEntities.dequeue() else : newEntity(this.totalComponents)
   this.creationIndex+=1
   entity.initialize(this, name, generateUUID(), this.creationIndex)
   this.entities[entity.id] = entity

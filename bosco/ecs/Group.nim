@@ -1,3 +1,20 @@
+##
+## Group - method forward declarations
+##
+proc newGroup*(matcher : Matcher): Group
+proc constructor*(this : Group, matcher : Matcher): void
+proc addEntity(this : Group, entity : Entity, index : int, component : IComponent): void
+proc addEntitySilently(this : Group, entity : Entity): void
+proc containsEntity(this : Group, entity : Entity) : bool
+proc count*(this : Group) : int
+proc getEntities(this : Group) : seq[Entity]
+proc getSingleEntity(this : Group) : Entity
+proc handleEntity(this : Group, entity : Entity, index : int, component : IComponent): void
+proc handleEntitySilently(this : Group, entity : Entity): void
+proc removeEntity(this : Group, entity : Entity, index : int, component : IComponent): void
+proc removeEntitySilently(this : Group, entity : Entity): void
+proc `$`(this : Group) : string
+
 proc newGroup*(matcher : Matcher): Group =
   new(result)
   result.constructor(matcher)

@@ -1,3 +1,16 @@
+##
+## Matcher - method forward declarations
+##
+proc MatchAllOf*(args : seq[int]) : Matcher
+proc MatchAnyOf*(args : seq[int]) : Matcher
+proc newMatcher*() : Matcher
+proc constructor*(this: Matcher): void
+proc anyOf*(this: Matcher, args : seq[int]) : Matcher
+proc indices*(this: Matcher) : seq[int]
+proc matches*(this: Matcher, entity : Entity) : bool
+proc noneOf*(this: Matcher, args : seq[int]) : Matcher
+proc `$`*(this : Matcher) : string
+
 proc newMatcher*(): Matcher =
   new(result)
   result.constructor

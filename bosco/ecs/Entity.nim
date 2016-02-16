@@ -1,11 +1,34 @@
-proc newEntity*(componentsEnum : seq[string], totalComponents : int = 32): Entity =
-  new(result)
-  result.constructor(componentsEnum, totalComponents)
+##
+## Entity - method forward declarations
+##
+proc newEntity*(totalComponents : int = 32): Entity
+proc constructor*(this: Entity, totalComponents : int = 32): void
+proc addComponent*(this: Entity, index : int, component : IComponent) : Entity
+proc addRef(this: Entity) : void
+proc destroy*(this: Entity) : void
+proc getComponent*(this: Entity, index : int) : IComponent
+proc getComponentIndices*(this: Entity) : seq[int]
+proc getComponents*(this: Entity) : seq[IComponent]
+proc hasComponent*(this: Entity, index : int) : bool
+proc hasComponents*(this: Entity, indices : seq[int]) : bool
+proc hasAnyComponent*(this: Entity, indices : seq[int]) : bool
+proc initialize*(this: Entity, owner : World, name : string, uuid : string, creationIndex : int): void
+proc release(this: Entity) : void
+proc removeAllComponents*(this: Entity) : void
+proc removeComponent*(this: Entity, index : int) : Entity
+proc replaceComponent*(this: Entity, index : int, component : IComponent) : Entity
+proc `$`*(this: Entity) : string
 
-proc constructor*(this: Entity, componentsEnum : seq[string], totalComponents : int = 32): void =
+proc onEntityChanged*(this: World, entity : Entity, index : int, component : IComponent) : void
+proc onEntityReleased*(this: World, entity : Entity) : void
+
+
+proc newEntity*(totalComponents : int = 32): Entity =
+  new(result)
+  result.constructor(totalComponents)
+
+proc constructor*(this: Entity, totalComponents : int = 32): void =
   this.totalComponents = totalComponents
-  this.componentCount = componentsEnum.len
-  this.componentsEnum = componentsEnum
 
 proc initialize*(this: Entity, owner : World, name : string, uuid : string, creationIndex : int): void =
   this.owner = owner
@@ -22,7 +45,7 @@ proc addComponent*(this: Entity, index : int, component : IComponent) : Entity =
   if not this.isEnabled:
     raise newException(OSError, "EntityIsNotEnabledException - Cannot add component!")
   if this.hasComponent(index):
-    raise newException(OSError, interp"EntityAlreadyHasComponentException - Cannot add ${this.componentsEnum[index]} at index ${index}")
+    raise newException(OSError, interp"EntityAlreadyHasComponentException - Cannot add ${WorldComponentsEnum[index]} at index ${index}")
   this.components[index] = component
   this.componentsCache = nil
   this.componentIndicesCache = nil
@@ -48,7 +71,7 @@ proc removeComponent*(this: Entity, index : int) : Entity =
     raise newException(OSError, "EntityIsNotEnabledException - Cannot remove component!")
 
   if not this.hasComponent(index):
-    raise newException(OSError, interp"EntityDoesNotHaveComponentException - Cannot remove ${this.componentsEnum[index]} at index ${index}")
+    raise newException(OSError, interp"EntityDoesNotHaveComponentException - Cannot remove ${WorldComponentsEnum[index]} at index ${index}")
 
   this.ReplaceComponent(index, nil)
   return this
@@ -66,14 +89,14 @@ proc replaceComponent*(this: Entity, index : int, component : IComponent) : Enti
 
 proc getComponent*(this: Entity, index : int) : IComponent =
   if not this.hasComponent(index):
-      raise newException(OSError, interp"EntityDoesNotHaveComponentException - Cannot get ${this.componentsEnum[index]} at index ${index}")
+      raise newException(OSError, interp"EntityDoesNotHaveComponentException - Cannot get ${WorldComponentsEnum[index]} at index ${index}")
 
   return this.components[index]
 
 proc getComponents*(this: Entity) : seq[IComponent] =
   if this.componentsCache == nil:
     this.componentsCache = @[]
-    for i in 0..this.componentCount-1:
+    for i in 0..this.totalComponents-1:
       if this.components[i] != nil:
         this.componentsCache.add(this.components[i])
   return this.componentsCache
@@ -82,7 +105,7 @@ proc getComponentIndices*(this: Entity) : seq[int] =
   if this.componentIndicesCache == nil:
     this.componentIndicesCache = @[]
     var index = 0
-    for i in 0..this.componentCount-1:
+    for i in 0..this.totalComponents-1:
       if this.components[i] != nil:
         this.componentIndicesCache.add(index)
       index+= 1
@@ -103,7 +126,7 @@ proc hasAnyComponent*(this: Entity, indices : seq[int]) : bool =
 proc removeAllComponents*(this: Entity) : void =
   this.toStringCache = ""
   var index = 0
-  for i in 0..this.componentCount-1:
+  for i in 0..this.totalComponents-1:
     if this.components[i] != nil:
       this.ReplaceComponent(index, nil)
     index+=1

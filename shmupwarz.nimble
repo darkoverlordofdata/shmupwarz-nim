@@ -5,6 +5,8 @@ author        = "bruce"
 description   = "Game POC"
 license       = "MIT"
 
+srcDir        = "src"
+binDir        = "build"
 bin           = @["main"]
 # Dependencies
 

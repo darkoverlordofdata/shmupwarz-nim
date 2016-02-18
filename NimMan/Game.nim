@@ -77,6 +77,7 @@ proc Run*(g: var Game;) =
         while pollEvent(evt):
             case evt.kind
                 of QuitEvent:
+                    echo "QuitEvent"
                     running = false;
                 else: discard
         #Exit game if escape key is pressed

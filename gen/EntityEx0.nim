@@ -10,7 +10,7 @@ import ComponentEx
 const POOL_SIZE : int = 128
 
 
-type TPool = ref object of RootObj
+type PoolObj = ref object of RootObj
   ## @type {bosco.utils.Bag}
   boundsComponent* : Queue[BoundsComponent]
   ## @type {shmupwarz.BulletComponent}
@@ -51,7 +51,11 @@ type TPool = ref object of RootObj
   soundEffectComponent* : Queue[SoundEffectComponent]
   ## @type {bosco.utils.Bag}
   velocityComponent* : Queue[VelocityComponent]
-var Pool* = TPool()
+
+var Pool* = PoolObj()
+
+
+proc newPoolObj() =
 
 Pool.boundsComponent = initQueue[BoundsComponent]()
 for i in 1..POOL_SIZE:Pool.boundsComponent.add(BoundsComponent())
@@ -111,11 +115,11 @@ for i in 1..POOL_SIZE:Pool.velocityComponent.add(VelocityComponent())
 proc clearBoundsComponent*(this : Entity) =
   Pool.boundsComponent = initQueue[BoundsComponent]()
 
-## @type {shmupwarz.BoundsComponent} 
+## @type {shmupwarz.BoundsComponent}
 proc bounds*(this : Entity) : BoundsComponent =
   (BoundsComponent)this.getComponent(int(Component.Bounds))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasBounds*(this : Entity) : bool =
   this.hasComponent(int(Component.Bounds))
 
@@ -152,7 +156,7 @@ proc removeBounds*(this : Entity) : Entity =
   Pool.boundsComponent.enqueue(component)
   return this
 
-## @type {boolean} 
+## @type {boolean}
 proc isBullet*(this : Entity) : bool =
   this.hasComponent(int(Component.Bullet))
 proc `isBullet=`*(this : Entity, value : bool) =
@@ -174,11 +178,11 @@ proc setBullet*(this : Entity, value : bool) : Entity =
 proc clearColorAnimationComponent*(this : Entity) =
   Pool.colorAnimationComponent = initQueue[ColorAnimationComponent]()
 
-## @type {shmupwarz.ColorAnimationComponent} 
+## @type {shmupwarz.ColorAnimationComponent}
 proc colorAnimation*(this : Entity) : ColorAnimationComponent =
   (ColorAnimationComponent)this.getComponent(int(Component.ColorAnimation))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasColorAnimation*(this : Entity) : bool =
   this.hasComponent(int(Component.ColorAnimation))
 
@@ -279,7 +283,7 @@ proc removeColorAnimation*(this : Entity) : Entity =
   Pool.colorAnimationComponent.enqueue(component)
   return this
 
-## @type {boolean} 
+## @type {boolean}
 proc isDestroy*(this : Entity) : bool =
   this.hasComponent(int(Component.Destroy))
 proc `isDestroy=`*(this : Entity, value : bool) =
@@ -297,7 +301,7 @@ proc setDestroy*(this : Entity, value : bool) : Entity =
   this.isDestroy = value
   return this
 
-## @type {boolean} 
+## @type {boolean}
 proc isEnemy*(this : Entity) : bool =
   this.hasComponent(int(Component.Enemy))
 proc `isEnemy=`*(this : Entity, value : bool) =
@@ -319,11 +323,11 @@ proc setEnemy*(this : Entity, value : bool) : Entity =
 proc clearExpiresComponent*(this : Entity) =
   Pool.expiresComponent = initQueue[ExpiresComponent]()
 
-## @type {shmupwarz.ExpiresComponent} 
+## @type {shmupwarz.ExpiresComponent}
 proc expires*(this : Entity) : ExpiresComponent =
   (ExpiresComponent)this.getComponent(int(Component.Expires))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasExpires*(this : Entity) : bool =
   this.hasComponent(int(Component.Expires))
 
@@ -360,7 +364,7 @@ proc removeExpires*(this : Entity) : Entity =
   Pool.expiresComponent.enqueue(component)
   return this
 
-## @type {boolean} 
+## @type {boolean}
 proc isFiring*(this : Entity) : bool =
   this.hasComponent(int(Component.Firing))
 proc `isFiring=`*(this : Entity, value : bool) =
@@ -382,11 +386,11 @@ proc setFiring*(this : Entity, value : bool) : Entity =
 proc clearHealthComponent*(this : Entity) =
   Pool.healthComponent = initQueue[HealthComponent]()
 
-## @type {shmupwarz.HealthComponent} 
+## @type {shmupwarz.HealthComponent}
 proc health*(this : Entity) : HealthComponent =
   (HealthComponent)this.getComponent(int(Component.Health))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasHealth*(this : Entity) : bool =
   this.hasComponent(int(Component.Health))
 
@@ -431,11 +435,11 @@ proc removeHealth*(this : Entity) : Entity =
 proc clearLayerComponent*(this : Entity) =
   Pool.layerComponent = initQueue[LayerComponent]()
 
-## @type {shmupwarz.LayerComponent} 
+## @type {shmupwarz.LayerComponent}
 proc layer*(this : Entity) : LayerComponent =
   (LayerComponent)this.getComponent(int(Component.Layer))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasLayer*(this : Entity) : bool =
   this.hasComponent(int(Component.Layer))
 
@@ -476,11 +480,11 @@ proc removeLayer*(this : Entity) : Entity =
 proc clearLifeComponent*(this : Entity) =
   Pool.lifeComponent = initQueue[LifeComponent]()
 
-## @type {shmupwarz.LifeComponent} 
+## @type {shmupwarz.LifeComponent}
 proc life*(this : Entity) : LifeComponent =
   (LifeComponent)this.getComponent(int(Component.Life))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasLife*(this : Entity) : bool =
   this.hasComponent(int(Component.Life))
 
@@ -517,7 +521,7 @@ proc removeLife*(this : Entity) : Entity =
   Pool.lifeComponent.enqueue(component)
   return this
 
-## @type {boolean} 
+## @type {boolean}
 proc isMine*(this : Entity) : bool =
   this.hasComponent(int(Component.Mine))
 proc `isMine=`*(this : Entity, value : bool) =
@@ -539,11 +543,11 @@ proc setMine*(this : Entity, value : bool) : Entity =
 proc clearMouseComponent*(this : Entity) =
   Pool.mouseComponent = initQueue[MouseComponent]()
 
-## @type {shmupwarz.MouseComponent} 
+## @type {shmupwarz.MouseComponent}
 proc mouse*(this : Entity) : MouseComponent =
   (MouseComponent)this.getComponent(int(Component.Mouse))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasMouse*(this : Entity) : bool =
   this.hasComponent(int(Component.Mouse))
 
@@ -584,7 +588,7 @@ proc removeMouse*(this : Entity) : Entity =
   Pool.mouseComponent.enqueue(component)
   return this
 
-## @type {boolean} 
+## @type {boolean}
 proc isPlayer*(this : Entity) : bool =
   this.hasComponent(int(Component.Player))
 proc `isPlayer=`*(this : Entity, value : bool) =
@@ -606,11 +610,11 @@ proc setPlayer*(this : Entity, value : bool) : Entity =
 proc clearPositionComponent*(this : Entity) =
   Pool.positionComponent = initQueue[PositionComponent]()
 
-## @type {shmupwarz.PositionComponent} 
+## @type {shmupwarz.PositionComponent}
 proc position*(this : Entity) : PositionComponent =
   (PositionComponent)this.getComponent(int(Component.Position))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasPosition*(this : Entity) : bool =
   this.hasComponent(int(Component.Position))
 
@@ -655,11 +659,11 @@ proc removePosition*(this : Entity) : Entity =
 proc clearResourceComponent*(this : Entity) =
   Pool.resourceComponent = initQueue[ResourceComponent]()
 
-## @type {shmupwarz.ResourceComponent} 
+## @type {shmupwarz.ResourceComponent}
 proc resource*(this : Entity) : ResourceComponent =
   (ResourceComponent)this.getComponent(int(Component.Resource))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasResource*(this : Entity) : bool =
   this.hasComponent(int(Component.Resource))
 
@@ -704,11 +708,11 @@ proc removeResource*(this : Entity) : Entity =
 proc clearScaleAnimationComponent*(this : Entity) =
   Pool.scaleAnimationComponent = initQueue[ScaleAnimationComponent]()
 
-## @type {shmupwarz.ScaleAnimationComponent} 
+## @type {shmupwarz.ScaleAnimationComponent}
 proc scaleAnimation*(this : Entity) : ScaleAnimationComponent =
   (ScaleAnimationComponent)this.getComponent(int(Component.ScaleAnimation))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasScaleAnimation*(this : Entity) : bool =
   this.hasComponent(int(Component.ScaleAnimation))
 
@@ -765,11 +769,11 @@ proc removeScaleAnimation*(this : Entity) : Entity =
 proc clearScaleComponent*(this : Entity) =
   Pool.scaleComponent = initQueue[ScaleComponent]()
 
-## @type {shmupwarz.ScaleComponent} 
+## @type {shmupwarz.ScaleComponent}
 proc scale*(this : Entity) : ScaleComponent =
   (ScaleComponent)this.getComponent(int(Component.Scale))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasScale*(this : Entity) : bool =
   this.hasComponent(int(Component.Scale))
 
@@ -814,11 +818,11 @@ proc removeScale*(this : Entity) : Entity =
 proc clearScoreComponent*(this : Entity) =
   Pool.scoreComponent = initQueue[ScoreComponent]()
 
-## @type {shmupwarz.ScoreComponent} 
+## @type {shmupwarz.ScoreComponent}
 proc score*(this : Entity) : ScoreComponent =
   (ScoreComponent)this.getComponent(int(Component.Score))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasScore*(this : Entity) : bool =
   this.hasComponent(int(Component.Score))
 
@@ -859,11 +863,11 @@ proc removeScore*(this : Entity) : Entity =
 proc clearSoundEffectComponent*(this : Entity) =
   Pool.soundEffectComponent = initQueue[SoundEffectComponent]()
 
-## @type {shmupwarz.SoundEffectComponent} 
+## @type {shmupwarz.SoundEffectComponent}
 proc soundEffect*(this : Entity) : SoundEffectComponent =
   (SoundEffectComponent)this.getComponent(int(Component.SoundEffect))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasSoundEffect*(this : Entity) : bool =
   this.hasComponent(int(Component.SoundEffect))
 
@@ -904,11 +908,11 @@ proc removeSoundEffect*(this : Entity) : Entity =
 proc clearVelocityComponent*(this : Entity) =
   Pool.velocityComponent = initQueue[VelocityComponent]()
 
-## @type {shmupwarz.VelocityComponent} 
+## @type {shmupwarz.VelocityComponent}
 proc velocity*(this : Entity) : VelocityComponent =
   (VelocityComponent)this.getComponent(int(Component.Velocity))
 
-## @type {boolean} 
+## @type {boolean}
 proc hasVelocity*(this : Entity) : bool =
   this.hasComponent(int(Component.Velocity))
 
@@ -948,5 +952,3 @@ proc removeVelocity*(this : Entity) : Entity =
   discard this.removeComponent(int(Component.Velocity))
   Pool.velocityComponent.enqueue(component)
   return this
-
-

@@ -8,7 +8,7 @@ import bosco/Sprite
 
 
 type
-  Component* = enum
+  Component* {.pure.} = enum
     Bounds
     Bullet
     ColorAnimation
@@ -117,6 +117,3 @@ type
   VelocityComponent* = ref object of IComponent
     x* : float64
     y* : float64
-
-
-

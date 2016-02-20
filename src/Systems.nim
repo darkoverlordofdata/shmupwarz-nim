@@ -6,7 +6,7 @@ method initialize*(this : ViewManagerSystem) =
   this.world.getGroup(Match.Resource).onAddEntity
   .addHandler(proc(e : EventArgs) =
     var res = ResourceComponent(EntityArgs(e).component)
-    res.sprite = SpriteFromFile(this.game.renderer, "res/images/fighter.png")
+    res.sprite = SpriteFromFile(this.game.renderer, res.path)
     this.game.sprites.add(res.sprite)
   )
 

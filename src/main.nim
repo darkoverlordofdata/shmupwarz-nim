@@ -1,16 +1,11 @@
-import strfmt
-import unittest, macros
-import sdl2
-import sdl2/image
-import sdl2/ttf
-import bosco/ECS
-import bosco/Sprite
-import bosco/AbstractGame
-import ComponentEx
-import MatchEx
-import WorldEx
-import EntityEx
 import events
+import bosco/ECS          # Entity/Component/System Framework
+import bosco/Sprite       # GUI Sprite object
+import bosco/AbstractGame # Base game
+import gen/ComponentEx    # Generated Components
+import gen/MatchEx        # Generated Matchers
+import gen/WorldEx        # Generated World Extensions
+import gen/EntityEx       # Generated Entity Extensions
 
 type
 
@@ -27,13 +22,7 @@ type
     player* : Entity
 
 include "Systems"
-
-proc createPlayer*(this : Game) : Entity =
-  return this.world.createEntity("player")
-  .setPlayer(true)
-  .addPosition(0, 0)
-  .addVelocity(0, 0)
-  .addResource("res/images/fighter.png", nil)
+include "Entities"
 
 proc constructor*(this : Game, name : string, width : cint, height : cint) =
   this.name = name
@@ -61,6 +50,5 @@ method update*(this : Game, delta : float64) =
 
 method cleanup(this : Game) =
   echo "Bye!"
-  image.quit()
 
 newGame("My Game", 320, 480).start()

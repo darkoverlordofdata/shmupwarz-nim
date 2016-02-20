@@ -5,6 +5,11 @@
 ##
 import bosco/ECS
 import ComponentEx
+
+##
+## Define a Match for each Component
+##
+
 type MatchObj = ref object of RootObj
   ## @type {bosco.Match}
   matchBounds : Matcher

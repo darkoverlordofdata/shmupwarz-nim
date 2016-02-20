@@ -18,7 +18,7 @@ type
     lastTick : uint32
 
 proc init_sdl(this : AbstractGame)
-proc start*(this : AbstractGame) :  int {.discardable.}
+method start*(this : AbstractGame) {.base.}
 proc render*(this : AbstractGame)
 method event*(this : AbstractGame, evt : Event) {.base.}
 method update*(this : AbstractGame, delta : float64) {.base.}
@@ -40,7 +40,7 @@ proc init_sdl(this : AbstractGame) =
       echo "Error creating SDL_Renderer: ", getError()
       quit 1
 
-proc start*(this : AbstractGame) : int =
+method start*(this : AbstractGame) =
   ## Start the game
   this.init_sdl()
   this.initialize()
@@ -62,7 +62,6 @@ proc start*(this : AbstractGame) : int =
   destroy this.renderer
   destroy this.window
   this.cleanup()
-  return 0
 
 proc render*(this : AbstractGame) =
   ## Render the frame

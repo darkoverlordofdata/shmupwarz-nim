@@ -7,109 +7,11 @@ import queues
 import bosco/ECS
 import bosco/Sprite
 import ComponentEx
-const POOL_SIZE : int = 128
+# import PoolEx
 
-
-type PoolObj = ref object of RootObj
-  ## @type {bosco.utils.Bag}
-  boundsComponent* : Queue[BoundsComponent]
-  ## @type {shmupwarz.BulletComponent}
-  bulletComponent* : BulletComponent
-  ## @type {bosco.utils.Bag}
-  colorAnimationComponent* : Queue[ColorAnimationComponent]
-  ## @type {shmupwarz.DestroyComponent}
-  destroyComponent* : DestroyComponent
-  ## @type {shmupwarz.EnemyComponent}
-  enemyComponent* : EnemyComponent
-  ## @type {bosco.utils.Bag}
-  expiresComponent* : Queue[ExpiresComponent]
-  ## @type {shmupwarz.FiringComponent}
-  firingComponent* : FiringComponent
-  ## @type {bosco.utils.Bag}
-  healthComponent* : Queue[HealthComponent]
-  ## @type {bosco.utils.Bag}
-  layerComponent* : Queue[LayerComponent]
-  ## @type {bosco.utils.Bag}
-  lifeComponent* : Queue[LifeComponent]
-  ## @type {shmupwarz.MineComponent}
-  mineComponent* : MineComponent
-  ## @type {bosco.utils.Bag}
-  mouseComponent* : Queue[MouseComponent]
-  ## @type {shmupwarz.PlayerComponent}
-  playerComponent* : PlayerComponent
-  ## @type {bosco.utils.Bag}
-  positionComponent* : Queue[PositionComponent]
-  ## @type {bosco.utils.Bag}
-  resourceComponent* : Queue[ResourceComponent]
-  ## @type {bosco.utils.Bag}
-  scaleAnimationComponent* : Queue[ScaleAnimationComponent]
-  ## @type {bosco.utils.Bag}
-  scaleComponent* : Queue[ScaleComponent]
-  ## @type {bosco.utils.Bag}
-  scoreComponent* : Queue[ScoreComponent]
-  ## @type {bosco.utils.Bag}
-  soundEffectComponent* : Queue[SoundEffectComponent]
-  ## @type {bosco.utils.Bag}
-  velocityComponent* : Queue[VelocityComponent]
-
-proc newPoolObj() : PoolObj =
-  new(result)
-
-  result.boundsComponent = initQueue[BoundsComponent]()
-  for i in 1..POOL_SIZE:result.boundsComponent.add(BoundsComponent())
-
-  result.bulletComponent = BulletComponent()
-
-  result.colorAnimationComponent = initQueue[ColorAnimationComponent]()
-  for i in 1..POOL_SIZE:result.colorAnimationComponent.add(ColorAnimationComponent())
-
-  result.destroyComponent = DestroyComponent()
-
-  result.enemyComponent = EnemyComponent()
-
-  result.expiresComponent = initQueue[ExpiresComponent]()
-  for i in 1..POOL_SIZE:result.expiresComponent.add(ExpiresComponent())
-
-  result.firingComponent = FiringComponent()
-
-  result.healthComponent = initQueue[HealthComponent]()
-  for i in 1..POOL_SIZE:result.healthComponent.add(HealthComponent())
-
-  result.layerComponent = initQueue[LayerComponent]()
-  for i in 1..POOL_SIZE:result.layerComponent.add(LayerComponent())
-
-  result.lifeComponent = initQueue[LifeComponent]()
-  for i in 1..POOL_SIZE:result.lifeComponent.add(LifeComponent())
-
-  result.mineComponent = MineComponent()
-
-  result.mouseComponent = initQueue[MouseComponent]()
-  for i in 1..POOL_SIZE:result.mouseComponent.add(MouseComponent())
-
-  result.playerComponent = PlayerComponent()
-
-  result.positionComponent = initQueue[PositionComponent]()
-  for i in 1..POOL_SIZE:result.positionComponent.add(PositionComponent())
-
-  result.resourceComponent = initQueue[ResourceComponent]()
-  for i in 1..POOL_SIZE:result.resourceComponent.add(ResourceComponent())
-
-  result.scaleAnimationComponent = initQueue[ScaleAnimationComponent]()
-  for i in 1..POOL_SIZE:result.scaleAnimationComponent.add(ScaleAnimationComponent())
-
-  result.scaleComponent = initQueue[ScaleComponent]()
-  for i in 1..POOL_SIZE:result.scaleComponent.add(ScaleComponent())
-
-  result.scoreComponent = initQueue[ScoreComponent]()
-  for i in 1..POOL_SIZE:result.scoreComponent.add(ScoreComponent())
-
-  result.soundEffectComponent = initQueue[SoundEffectComponent]()
-  for i in 1..POOL_SIZE:result.soundEffectComponent.add(SoundEffectComponent())
-
-  result.velocityComponent = initQueue[VelocityComponent]()
-  for i in 1..POOL_SIZE:result.velocityComponent.add(VelocityComponent())
-
-var Pool* = PoolObj()
+##
+## Extend Entity
+##
 
 proc clearBoundsComponent*(this : Entity) =
   Pool.boundsComponent = initQueue[BoundsComponent]()

@@ -2,7 +2,6 @@
 ## Group - method forward declarations
 ##
 proc newGroup*(matcher : Matcher): Group
-proc constructor*(this : Group, matcher : Matcher): void
 proc addEntity(this : Group, entity : Entity, index : int, component : IComponent): void
 proc addEntitySilently(this : Group, entity : Entity): void
 proc containsEntity(this : Group, entity : Entity) : bool
@@ -14,20 +13,18 @@ proc handleEntitySilently(this : Group, entity : Entity): void
 proc removeEntity(this : Group, entity : Entity, index : int, component : IComponent): void
 proc removeEntitySilently(this : Group, entity : Entity): void
 proc `$`*(this : Group) : string
-
+##
+##  constructor
+##
 proc newGroup*(matcher : Matcher): Group =
   new(result)
-  result.constructor(matcher)
+  result.onAddEntity = initEventHandler("onAddEntity")
+  result.onRemoveEntity = initEventHandler("onRemoveEntity")
+  result.entities = initTable[int, Entity]()
+  result.entitiesCache = @[]
+  result.matcher = matcher
 
 proc count*(this : Group) : int = return this.entities.len
-
-proc constructor*(this : Group, matcher : Matcher): void =
-  this.onAddEntity = initEventHandler("onAddEntity")
-  this.onRemoveEntity = initEventHandler("onRemoveEntity")
-  this.entities = initTable[int, Entity]()
-  this.entitiesCache = @[]
-  this.matcher = matcher
-  return
 
 proc addEntitySilently(this : Group, entity : Entity): void =
   if not this.entities.hasKey(entity.id):

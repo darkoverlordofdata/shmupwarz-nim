@@ -1,4 +1,4 @@
-import bosco/ECS
+import bosco/ecs
 import bosco/Sprite
 import bosco/AbstractGame
 import strfmt

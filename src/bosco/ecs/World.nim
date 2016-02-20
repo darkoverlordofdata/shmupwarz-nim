@@ -2,7 +2,6 @@
 ## World - method forward declarations
 ##
 proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): World
-proc constructor*(this: World, componentsEnum : seq[string], startCreationIndex : int = 0): void
 proc add*(this: World, system : System) : void
 proc count*(this : World) : int
 proc createEntity*(this: World, name : string): Entity
@@ -15,34 +14,30 @@ proc hasEntity*(this: World, entity : Entity): bool
 proc initialize*(this: World) : void
 proc reusableEntitiesCount*(this : World) : int
 proc retainedEntitiesCount*(this : World) : int
-
+##
+##  constructor
+##
 proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): World =
   new(result)
-  result.constructor(componentsEnum, startCreationIndex)
+  result.componentsEnum = componentsEnum
+  result.totalComponents = componentsEnum.len
+  result.creationIndex = startCreationIndex
+  result.groupsForIndex = initTable[int, seq[Group]]()
+  result.reusableEntities = initQueue[Entity]()
+  result.retainedEntities = initTable[int, Entity]()
+  result.entitiesCache = @[]
+  result.entities = initTable[int, Entity]()
+  result.groups = initTable[int, Group]()
+  result.initializeSystems = @[]
+  result.executeSystems = @[]
+  WorldComponentsEnum = componentsEnum
+  WorldTotalComponents = componentsEnum.len
+  WorldInstance = result
 
 ## Getters
 proc count*(this : World) : int = this.entities.len
 proc reusableEntitiesCount*(this : World) : int = this.reusableEntities.len
 proc retainedEntitiesCount*(this : World) : int = this.retainedEntities.len
-
-
-proc constructor*(this: World, componentsEnum : seq[string], startCreationIndex : int = 0): void =
-
-  this.componentsEnum = componentsEnum
-  this.totalComponents = componentsEnum.len
-  this.creationIndex = startCreationIndex
-  this.groupsForIndex = initTable[int, seq[Group]]()
-
-  this.reusableEntities = initQueue[Entity]()
-  this.retainedEntities = initTable[int, Entity]()
-  this.entitiesCache = @[]
-  this.entities = initTable[int, Entity]()
-  this.groups = initTable[int, Group]()
-  this.initializeSystems = @[]
-  this.executeSystems = @[]
-  WorldComponentsEnum = componentsEnum
-  WorldTotalComponents = componentsEnum.len
-  WorldInstance = this
 
 proc onEntityReleased*(this: World, entity : Entity) : void  =
   if entity.isEnabled:

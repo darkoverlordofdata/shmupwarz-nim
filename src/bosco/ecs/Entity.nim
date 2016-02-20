@@ -2,7 +2,6 @@
 ## Entity - method forward declarations
 ##
 proc newEntity*(totalComponents : int = 32): Entity
-proc constructor*(this: Entity, totalComponents : int = 32): void
 proc addComponent*(this: Entity, index : int, component : IComponent) : Entity
 proc addRef(this: Entity) : void
 proc destroy*(this: Entity) : void
@@ -18,17 +17,14 @@ proc removeAllComponents*(this: Entity) : void
 proc removeComponent*(this: Entity, index : int) : Entity
 proc replaceComponent*(this: Entity, index : int, component : IComponent) : Entity
 proc `$`*(this: Entity) : string
-
 proc onEntityChanged*(this: World, entity : Entity, index : int, component : IComponent) : void
 proc onEntityReleased*(this: World, entity : Entity) : void
-
-
+##
+##  constructor
+##
 proc newEntity*(totalComponents : int = 32): Entity =
   new(result)
-  result.constructor(totalComponents)
-
-proc constructor*(this: Entity, totalComponents : int = 32): void =
-  this.totalComponents = totalComponents
+  result.totalComponents = totalComponents
 
 proc initialize*(this: Entity, owner : World, name : string, uuid : string, creationIndex : int): void =
   this.owner = owner

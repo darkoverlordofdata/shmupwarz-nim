@@ -8,16 +8,19 @@ import ComponentEx
 import MatchEx
 import EntityEx
 
+##
+## Extend World
+##
 
-## @type {bosco.Entity} 
+## @type {bosco.Entity}
 proc scoreEntity*(this : World) : Entity =
   return this.getGroup(Match.Score).getSingleEntity()
 
-## @type {shmupwarz.ScoreComponent} 
+## @type {shmupwarz.ScoreComponent}
 proc score*(this : World) : ScoreComponent =
   return this.scoreEntity.score
 
-## @type {boolean} 
+## @type {boolean}
 proc hasScore*(this : World) : bool =
   return this.scoreEntity != nil
 
@@ -51,15 +54,15 @@ proc replaceScore*(this : World, value:float64) : Entity =
 proc removeScore*(this : World) =
   this.destroyEntity(this.scoreEntity)
 
-## @type {bosco.Entity} 
+## @type {bosco.Entity}
 proc mouseEntity*(this : World) : Entity =
   return this.getGroup(Match.Mouse).getSingleEntity()
 
-## @type {shmupwarz.MouseComponent} 
+## @type {shmupwarz.MouseComponent}
 proc mouse*(this : World) : MouseComponent =
   return this.mouseEntity.mouse
 
-## @type {boolean} 
+## @type {boolean}
 proc hasMouse*(this : World) : bool =
   return this.mouseEntity != nil
 
@@ -95,11 +98,11 @@ proc replaceMouse*(this : World, x:float64, y:float64) : Entity =
 proc removeMouse*(this : World) =
   this.destroyEntity(this.mouseEntity)
 
-## @type {bosco.Match} 
+## @type {bosco.Match}
 proc firingEntity*(this : World) : Entity =
   return this.getGroup(Match.Firing).getSingleEntity()
 
-## @type {boolean} 
+## @type {boolean}
 proc isFiring*(this : World) : bool =
   return this.firingEntity != nil
 proc `isFiring=`*(this : World, value : bool) =
@@ -109,5 +112,3 @@ proc `isFiring=`*(this : World, value : bool) =
       this.createEntity("Firing").isFiring = true
     else:
       this.destroyEntity(entity)
-
-

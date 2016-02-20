@@ -3,7 +3,7 @@ import unittest, macros
 import sdl2
 import sdl2/image
 import sdl2/ttf
-import bosco/ECS
+import bosco/ecs
 import bosco/Sprite
 import bosco/AbstractGame
 import Components

@@ -4,23 +4,21 @@
 proc MatchAllOf*(args : seq[int]) : Matcher
 proc MatchAnyOf*(args : seq[int]) : Matcher
 proc newMatcher*() : Matcher
-proc constructor*(this: Matcher): void
 proc anyOf*(this: Matcher, args : seq[int]) : Matcher
 proc indices*(this: Matcher) : seq[int]
 proc matches*(this: Matcher, entity : Entity) : bool
 proc noneOf*(this: Matcher, args : seq[int]) : Matcher
 proc `$`*(this : Matcher) : string
-
+##
+##  constructor
+##
 proc newMatcher*(): Matcher =
   new(result)
-  result.constructor
-
-proc constructor*(this: Matcher): void =
-  this.id = MatcherUniqueId
+  result.id = MatcherUniqueId
   MatcherUniqueId = MatcherUniqueId+1
-  this.allOfIndices = @[]
-  this.anyOfIndices = @[]
-  this.noneOfIndices = @[]
+  result.allOfIndices = @[]
+  result.anyOfIndices = @[]
+  result.noneOfIndices = @[]
 
 proc indices*(this: Matcher) : seq[int] =
   if this.indicesCache == nil:

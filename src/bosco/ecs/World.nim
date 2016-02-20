@@ -52,7 +52,7 @@ proc onEntityReleased*(this: World, entity : Entity) : void  =
   this.reusableEntities.enqueue(entity)
 
 proc onEntityChanged*(this: World, entity : Entity, index : int, component : IComponent) : void =
-  if index+1 <= this.groupsForIndex.len:
+  if this.groupsForIndex.hasKey(index):
     var groups = this.groupsForIndex[index]
     if groups != nil:
       for group in groups:

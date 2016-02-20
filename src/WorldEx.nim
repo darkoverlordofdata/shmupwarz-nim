@@ -9,7 +9,7 @@ import MatchEx
 import EntityEx
 
 
-## @type {entitas.Entity} 
+## @type {bosco.Entity} 
 proc scoreEntity*(this : World) : Entity =
   return this.getGroup(Match.Score).getSingleEntity()
 
@@ -23,7 +23,7 @@ proc hasScore*(this : World) : bool =
 
 ##
 ## @param {float64} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc setScore*(this : World, value:float64) : Entity =
   if this.hasScore:
@@ -35,7 +35,7 @@ proc setScore*(this : World, value:float64) : Entity =
 
 ##
 ## @param {float64} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceScore*(this : World, value:float64) : Entity =
   var entity = this.scoreEntity
@@ -46,12 +46,12 @@ proc replaceScore*(this : World, value:float64) : Entity =
   return entity
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeScore*(this : World) =
   this.destroyEntity(this.scoreEntity)
 
-## @type {entitas.Entity} 
+## @type {bosco.Entity} 
 proc mouseEntity*(this : World) : Entity =
   return this.getGroup(Match.Mouse).getSingleEntity()
 
@@ -66,7 +66,7 @@ proc hasMouse*(this : World) : bool =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc setMouse*(this : World, x:float64, y:float64) : Entity =
   if this.hasMouse:
@@ -79,7 +79,7 @@ proc setMouse*(this : World, x:float64, y:float64) : Entity =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceMouse*(this : World, x:float64, y:float64) : Entity =
   var entity = this.mouseEntity
@@ -90,12 +90,12 @@ proc replaceMouse*(this : World, x:float64, y:float64) : Entity =
   return entity
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeMouse*(this : World) =
   this.destroyEntity(this.mouseEntity)
 
-## @type {entitas.Match} 
+## @type {bosco.Match} 
 proc firingEntity*(this : World) : Entity =
   return this.getGroup(Match.Firing).getSingleEntity()
 

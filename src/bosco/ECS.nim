@@ -6,6 +6,7 @@ import sets
 import queues
 import sequtils
 import nuuid
+import events
 
 const MAX_COMPONENTS = 31
 
@@ -52,6 +53,8 @@ type
     matcher*              : Matcher
     singleEntityCache     : Entity
     toStringCache         : string
+    onAddEntity*          : EventHandler
+    onRemoveEntity*       : EventHandler
 
   World* = ref object of RootObj
     ##
@@ -76,6 +79,11 @@ type
     ##
     world*                 : World
 
+  EntityArgs* = object of EventArgs
+    entity*: Entity
+    index* : int
+    component* : IComponent
+
 var
   EntityInstanceIndex     : int
   EntitySize              : int
@@ -83,6 +91,12 @@ var
   WorldInstance           : World
   WorldComponentsEnum     : seq[string]
   WorldTotalComponents    : int
+  EventEmitter = initEventEmitter()
+
+proc newEntityArgs*(entity : Entity, index : int, component : IComponent): EntityArgs =
+  result.entity = entity
+  result.index = index
+  result.component = component
 
 include ecs/Entity
 include ecs/Matcher

@@ -10,114 +10,106 @@ import ComponentEx
 const POOL_SIZE : int = 128
 
 
-type TPool = ref object
-  ## @type {entitas.utils.Bag}
-  boundsComponentPool* : Queue[BoundsComponent]
+type TPool = ref object of RootObj
+  ## @type {bosco.utils.Bag}
+  boundsComponent* : Queue[BoundsComponent]
   ## @type {shmupwarz.BulletComponent}
   bulletComponent* : BulletComponent
-  ## @type {entitas.utils.Bag}
-  colorAnimationComponentPool* : Queue[ColorAnimationComponent]
+  ## @type {bosco.utils.Bag}
+  colorAnimationComponent* : Queue[ColorAnimationComponent]
   ## @type {shmupwarz.DestroyComponent}
   destroyComponent* : DestroyComponent
   ## @type {shmupwarz.EnemyComponent}
   enemyComponent* : EnemyComponent
-  ## @type {entitas.utils.Bag}
-  expiresComponentPool* : Queue[ExpiresComponent]
+  ## @type {bosco.utils.Bag}
+  expiresComponent* : Queue[ExpiresComponent]
   ## @type {shmupwarz.FiringComponent}
   firingComponent* : FiringComponent
-  ## @type {entitas.utils.Bag}
-  healthComponentPool* : Queue[HealthComponent]
-  ## @type {entitas.utils.Bag}
-  layerComponentPool* : Queue[LayerComponent]
-  ## @type {entitas.utils.Bag}
-  lifeComponentPool* : Queue[LifeComponent]
+  ## @type {bosco.utils.Bag}
+  healthComponent* : Queue[HealthComponent]
+  ## @type {bosco.utils.Bag}
+  layerComponent* : Queue[LayerComponent]
+  ## @type {bosco.utils.Bag}
+  lifeComponent* : Queue[LifeComponent]
   ## @type {shmupwarz.MineComponent}
   mineComponent* : MineComponent
-  ## @type {entitas.utils.Bag}
-  mouseComponentPool* : Queue[MouseComponent]
+  ## @type {bosco.utils.Bag}
+  mouseComponent* : Queue[MouseComponent]
   ## @type {shmupwarz.PlayerComponent}
   playerComponent* : PlayerComponent
-  ## @type {entitas.utils.Bag}
-  positionComponentPool* : Queue[PositionComponent]
-  ## @type {entitas.utils.Bag}
-  resourceComponentPool* : Queue[ResourceComponent]
-  ## @type {entitas.utils.Bag}
-  scaleAnimationComponentPool* : Queue[ScaleAnimationComponent]
-  ## @type {entitas.utils.Bag}
-  scaleComponentPool* : Queue[ScaleComponent]
-  ## @type {entitas.utils.Bag}
-  scoreComponentPool* : Queue[ScoreComponent]
-  ## @type {entitas.utils.Bag}
-  soundEffectComponentPool* : Queue[SoundEffectComponent]
-  ## @type {entitas.utils.Bag}
-  velocityComponentPool* : Queue[VelocityComponent]
+  ## @type {bosco.utils.Bag}
+  positionComponent* : Queue[PositionComponent]
+  ## @type {bosco.utils.Bag}
+  resourceComponent* : Queue[ResourceComponent]
+  ## @type {bosco.utils.Bag}
+  scaleAnimationComponent* : Queue[ScaleAnimationComponent]
+  ## @type {bosco.utils.Bag}
+  scaleComponent* : Queue[ScaleComponent]
+  ## @type {bosco.utils.Bag}
+  scoreComponent* : Queue[ScoreComponent]
+  ## @type {bosco.utils.Bag}
+  soundEffectComponent* : Queue[SoundEffectComponent]
+  ## @type {bosco.utils.Bag}
+  velocityComponent* : Queue[VelocityComponent]
 var Pool* = TPool()
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.boundsComponentPool = initQueue[BoundsComponent]()
-for i in 1..POOL_SIZE:
-  Pool.boundsComponentPool.add(BoundsComponent())
+
+Pool.boundsComponent = initQueue[BoundsComponent]()
+for i in 1..POOL_SIZE:Pool.boundsComponent.add(BoundsComponent())
+
 Pool.bulletComponent = BulletComponent()
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.colorAnimationComponentPool = initQueue[ColorAnimationComponent]()
-for i in 1..POOL_SIZE:
-  Pool.colorAnimationComponentPool.add(ColorAnimationComponent())
+
+Pool.colorAnimationComponent = initQueue[ColorAnimationComponent]()
+for i in 1..POOL_SIZE:Pool.colorAnimationComponent.add(ColorAnimationComponent())
+
 Pool.destroyComponent = DestroyComponent()
+
 Pool.enemyComponent = EnemyComponent()
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.expiresComponentPool = initQueue[ExpiresComponent]()
-for i in 1..POOL_SIZE:
-  Pool.expiresComponentPool.add(ExpiresComponent())
+
+Pool.expiresComponent = initQueue[ExpiresComponent]()
+for i in 1..POOL_SIZE:Pool.expiresComponent.add(ExpiresComponent())
+
 Pool.firingComponent = FiringComponent()
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.healthComponentPool = initQueue[HealthComponent]()
-for i in 1..POOL_SIZE:
-  Pool.healthComponentPool.add(HealthComponent())
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.layerComponentPool = initQueue[LayerComponent]()
-for i in 1..POOL_SIZE:
-  Pool.layerComponentPool.add(LayerComponent())
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.lifeComponentPool = initQueue[LifeComponent]()
-for i in 1..POOL_SIZE:
-  Pool.lifeComponentPool.add(LifeComponent())
+
+Pool.healthComponent = initQueue[HealthComponent]()
+for i in 1..POOL_SIZE:Pool.healthComponent.add(HealthComponent())
+
+Pool.layerComponent = initQueue[LayerComponent]()
+for i in 1..POOL_SIZE:Pool.layerComponent.add(LayerComponent())
+
+Pool.lifeComponent = initQueue[LifeComponent]()
+for i in 1..POOL_SIZE:Pool.lifeComponent.add(LifeComponent())
+
 Pool.mineComponent = MineComponent()
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.mouseComponentPool = initQueue[MouseComponent]()
-for i in 1..POOL_SIZE:
-  Pool.mouseComponentPool.add(MouseComponent())
+
+Pool.mouseComponent = initQueue[MouseComponent]()
+for i in 1..POOL_SIZE:Pool.mouseComponent.add(MouseComponent())
+
 Pool.playerComponent = PlayerComponent()
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.positionComponentPool = initQueue[PositionComponent]()
-for i in 1..POOL_SIZE:
-  Pool.positionComponentPool.add(PositionComponent())
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.resourceComponentPool = initQueue[ResourceComponent]()
-for i in 1..POOL_SIZE:
-  Pool.resourceComponentPool.add(ResourceComponent())
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.scaleAnimationComponentPool = initQueue[ScaleAnimationComponent]()
-for i in 1..POOL_SIZE:
-  Pool.scaleAnimationComponentPool.add(ScaleAnimationComponent())
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.scaleComponentPool = initQueue[ScaleComponent]()
-for i in 1..POOL_SIZE:
-  Pool.scaleComponentPool.add(ScaleComponent())
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.scoreComponentPool = initQueue[ScoreComponent]()
-for i in 1..POOL_SIZE:
-  Pool.scoreComponentPool.add(ScoreComponent())
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.soundEffectComponentPool = initQueue[SoundEffectComponent]()
-for i in 1..POOL_SIZE:
-  Pool.soundEffectComponentPool.add(SoundEffectComponent())
-#Pool.{name}ComponentPool = initQueue[Entity]()
-Pool.velocityComponentPool = initQueue[VelocityComponent]()
-for i in 1..POOL_SIZE:
-  Pool.velocityComponentPool.add(VelocityComponent())
+
+Pool.positionComponent = initQueue[PositionComponent]()
+for i in 1..POOL_SIZE:Pool.positionComponent.add(PositionComponent())
+
+Pool.resourceComponent = initQueue[ResourceComponent]()
+for i in 1..POOL_SIZE:Pool.resourceComponent.add(ResourceComponent())
+
+Pool.scaleAnimationComponent = initQueue[ScaleAnimationComponent]()
+for i in 1..POOL_SIZE:Pool.scaleAnimationComponent.add(ScaleAnimationComponent())
+
+Pool.scaleComponent = initQueue[ScaleComponent]()
+for i in 1..POOL_SIZE:Pool.scaleComponent.add(ScaleComponent())
+
+Pool.scoreComponent = initQueue[ScoreComponent]()
+for i in 1..POOL_SIZE:Pool.scoreComponent.add(ScoreComponent())
+
+Pool.soundEffectComponent = initQueue[SoundEffectComponent]()
+for i in 1..POOL_SIZE:Pool.soundEffectComponent.add(SoundEffectComponent())
+
+Pool.velocityComponent = initQueue[VelocityComponent]()
+for i in 1..POOL_SIZE:Pool.velocityComponent.add(VelocityComponent())
 
 
-proc clearBoundsComponentPool*(this : Entity) =
-  Pool.boundsComponentPool = initQueue[BoundsComponent]()
+proc clearBoundsComponent*(this : Entity) =
+  Pool.boundsComponent = initQueue[BoundsComponent]()
 
 ## @type {shmupwarz.BoundsComponent} 
 proc bounds*(this : Entity) : BoundsComponent =
@@ -129,35 +121,35 @@ proc hasBounds*(this : Entity) : bool =
 
 ##
 ## @param {float64} radius
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addBounds*(this : Entity, radius:float64) : Entity =
-  var component = if Pool.boundsComponentPool.len > 0 : Pool.boundsComponentPool.dequeue() else: BoundsComponent()
+  var component = if Pool.boundsComponent.len > 0 : Pool.boundsComponent.dequeue() else: BoundsComponent()
   component.radius = radius
   discard this.addComponent(int(Component.Bounds), component)
   return this
 
 ##
 ## @param {float64} radius
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceBounds*(this : Entity, radius:float64) : Entity =
   var previousComponent = if this.hasBounds : this.bounds else: nil
-  var component = if Pool.boundsComponentPool.len > 0 : Pool.boundsComponentPool.dequeue() else: BoundsComponent()
+  var component = if Pool.boundsComponent.len > 0 : Pool.boundsComponent.dequeue() else: BoundsComponent()
   component.radius = radius
   discard this.replaceComponent(int(Component.Bounds), component)
   if previousComponent != nil:
-    Pool.boundsComponentPool.enqueue(previousComponent)
+    Pool.boundsComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeBounds*(this : Entity) : Entity =
   var component = this.bounds
   discard this.removeComponent(int(Component.Bounds))
-  Pool.boundsComponentPool.enqueue(component)
+  Pool.boundsComponent.enqueue(component)
   return this
 
 ## @type {boolean} 
@@ -172,15 +164,15 @@ proc `isBullet=`*(this : Entity, value : bool) =
 
 ##
 ## @param {boolean} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc setBullet*(this : Entity, value : bool) : Entity =
   this.isBullet = value
   return this
 
 
-proc clearColorAnimationComponentPool*(this : Entity) =
-  Pool.colorAnimationComponentPool = initQueue[ColorAnimationComponent]()
+proc clearColorAnimationComponent*(this : Entity) =
+  Pool.colorAnimationComponent = initQueue[ColorAnimationComponent]()
 
 ## @type {shmupwarz.ColorAnimationComponent} 
 proc colorAnimation*(this : Entity) : ColorAnimationComponent =
@@ -208,10 +200,10 @@ proc hasColorAnimation*(this : Entity) : bool =
 ## @param {bool} blueAnimate
 ## @param {bool} alphaAnimate
 ## @param {bool} repeat
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addColorAnimation*(this : Entity, redMin:float64, redMax:float64, redSpeed:float64, greenMin:float64, greenMax:float64, greenSpeed:float64, blueMin:float64, blueMax:float64, blueSpeed:float64, alphaMin:float64, alphaMax:float64, alphaSpeed:float64, redAnimate:bool, greenAnimate:bool, blueAnimate:bool, alphaAnimate:bool, repeat:bool) : Entity =
-  var component = if Pool.colorAnimationComponentPool.len > 0 : Pool.colorAnimationComponentPool.dequeue() else: ColorAnimationComponent()
+  var component = if Pool.colorAnimationComponent.len > 0 : Pool.colorAnimationComponent.dequeue() else: ColorAnimationComponent()
   component.redMin = redMin
   component.redMax = redMax
   component.redSpeed = redSpeed
@@ -250,11 +242,11 @@ proc addColorAnimation*(this : Entity, redMin:float64, redMax:float64, redSpeed:
 ## @param {bool} blueAnimate
 ## @param {bool} alphaAnimate
 ## @param {bool} repeat
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceColorAnimation*(this : Entity, redMin:float64, redMax:float64, redSpeed:float64, greenMin:float64, greenMax:float64, greenSpeed:float64, blueMin:float64, blueMax:float64, blueSpeed:float64, alphaMin:float64, alphaMax:float64, alphaSpeed:float64, redAnimate:bool, greenAnimate:bool, blueAnimate:bool, alphaAnimate:bool, repeat:bool) : Entity =
   var previousComponent = if this.hasColorAnimation : this.colorAnimation else: nil
-  var component = if Pool.colorAnimationComponentPool.len > 0 : Pool.colorAnimationComponentPool.dequeue() else: ColorAnimationComponent()
+  var component = if Pool.colorAnimationComponent.len > 0 : Pool.colorAnimationComponent.dequeue() else: ColorAnimationComponent()
   component.redMin = redMin
   component.redMax = redMax
   component.redSpeed = redSpeed
@@ -274,17 +266,17 @@ proc replaceColorAnimation*(this : Entity, redMin:float64, redMax:float64, redSp
   component.repeat = repeat
   discard this.replaceComponent(int(Component.ColorAnimation), component)
   if previousComponent != nil:
-    Pool.colorAnimationComponentPool.enqueue(previousComponent)
+    Pool.colorAnimationComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeColorAnimation*(this : Entity) : Entity =
   var component = this.colorAnimation
   discard this.removeComponent(int(Component.ColorAnimation))
-  Pool.colorAnimationComponentPool.enqueue(component)
+  Pool.colorAnimationComponent.enqueue(component)
   return this
 
 ## @type {boolean} 
@@ -299,7 +291,7 @@ proc `isDestroy=`*(this : Entity, value : bool) =
 
 ##
 ## @param {boolean} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc setDestroy*(this : Entity, value : bool) : Entity =
   this.isDestroy = value
@@ -317,15 +309,15 @@ proc `isEnemy=`*(this : Entity, value : bool) =
 
 ##
 ## @param {boolean} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc setEnemy*(this : Entity, value : bool) : Entity =
   this.isEnemy = value
   return this
 
 
-proc clearExpiresComponentPool*(this : Entity) =
-  Pool.expiresComponentPool = initQueue[ExpiresComponent]()
+proc clearExpiresComponent*(this : Entity) =
+  Pool.expiresComponent = initQueue[ExpiresComponent]()
 
 ## @type {shmupwarz.ExpiresComponent} 
 proc expires*(this : Entity) : ExpiresComponent =
@@ -337,35 +329,35 @@ proc hasExpires*(this : Entity) : bool =
 
 ##
 ## @param {float64} delay
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addExpires*(this : Entity, delay:float64) : Entity =
-  var component = if Pool.expiresComponentPool.len > 0 : Pool.expiresComponentPool.dequeue() else: ExpiresComponent()
+  var component = if Pool.expiresComponent.len > 0 : Pool.expiresComponent.dequeue() else: ExpiresComponent()
   component.delay = delay
   discard this.addComponent(int(Component.Expires), component)
   return this
 
 ##
 ## @param {float64} delay
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceExpires*(this : Entity, delay:float64) : Entity =
   var previousComponent = if this.hasExpires : this.expires else: nil
-  var component = if Pool.expiresComponentPool.len > 0 : Pool.expiresComponentPool.dequeue() else: ExpiresComponent()
+  var component = if Pool.expiresComponent.len > 0 : Pool.expiresComponent.dequeue() else: ExpiresComponent()
   component.delay = delay
   discard this.replaceComponent(int(Component.Expires), component)
   if previousComponent != nil:
-    Pool.expiresComponentPool.enqueue(previousComponent)
+    Pool.expiresComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeExpires*(this : Entity) : Entity =
   var component = this.expires
   discard this.removeComponent(int(Component.Expires))
-  Pool.expiresComponentPool.enqueue(component)
+  Pool.expiresComponent.enqueue(component)
   return this
 
 ## @type {boolean} 
@@ -380,15 +372,15 @@ proc `isFiring=`*(this : Entity, value : bool) =
 
 ##
 ## @param {boolean} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc setFiring*(this : Entity, value : bool) : Entity =
   this.isFiring = value
   return this
 
 
-proc clearHealthComponentPool*(this : Entity) =
-  Pool.healthComponentPool = initQueue[HealthComponent]()
+proc clearHealthComponent*(this : Entity) =
+  Pool.healthComponent = initQueue[HealthComponent]()
 
 ## @type {shmupwarz.HealthComponent} 
 proc health*(this : Entity) : HealthComponent =
@@ -401,10 +393,10 @@ proc hasHealth*(this : Entity) : bool =
 ##
 ## @param {float64} health
 ## @param {float64} maximumHealth
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addHealth*(this : Entity, health:float64, maximumHealth:float64) : Entity =
-  var component = if Pool.healthComponentPool.len > 0 : Pool.healthComponentPool.dequeue() else: HealthComponent()
+  var component = if Pool.healthComponent.len > 0 : Pool.healthComponent.dequeue() else: HealthComponent()
   component.health = health
   component.maximumHealth = maximumHealth
   discard this.addComponent(int(Component.Health), component)
@@ -413,31 +405,31 @@ proc addHealth*(this : Entity, health:float64, maximumHealth:float64) : Entity =
 ##
 ## @param {float64} health
 ## @param {float64} maximumHealth
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceHealth*(this : Entity, health:float64, maximumHealth:float64) : Entity =
   var previousComponent = if this.hasHealth : this.health else: nil
-  var component = if Pool.healthComponentPool.len > 0 : Pool.healthComponentPool.dequeue() else: HealthComponent()
+  var component = if Pool.healthComponent.len > 0 : Pool.healthComponent.dequeue() else: HealthComponent()
   component.health = health
   component.maximumHealth = maximumHealth
   discard this.replaceComponent(int(Component.Health), component)
   if previousComponent != nil:
-    Pool.healthComponentPool.enqueue(previousComponent)
+    Pool.healthComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeHealth*(this : Entity) : Entity =
   var component = this.health
   discard this.removeComponent(int(Component.Health))
-  Pool.healthComponentPool.enqueue(component)
+  Pool.healthComponent.enqueue(component)
   return this
 
 
-proc clearLayerComponentPool*(this : Entity) =
-  Pool.layerComponentPool = initQueue[LayerComponent]()
+proc clearLayerComponent*(this : Entity) =
+  Pool.layerComponent = initQueue[LayerComponent]()
 
 ## @type {shmupwarz.LayerComponent} 
 proc layer*(this : Entity) : LayerComponent =
@@ -449,40 +441,40 @@ proc hasLayer*(this : Entity) : bool =
 
 ##
 ## @param {int} ordinal
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addLayer*(this : Entity, ordinal:int) : Entity =
-  var component = if Pool.layerComponentPool.len > 0 : Pool.layerComponentPool.dequeue() else: LayerComponent()
+  var component = if Pool.layerComponent.len > 0 : Pool.layerComponent.dequeue() else: LayerComponent()
   component.ordinal = ordinal
   discard this.addComponent(int(Component.Layer), component)
   return this
 
 ##
 ## @param {int} ordinal
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceLayer*(this : Entity, ordinal:int) : Entity =
   var previousComponent = if this.hasLayer : this.layer else: nil
-  var component = if Pool.layerComponentPool.len > 0 : Pool.layerComponentPool.dequeue() else: LayerComponent()
+  var component = if Pool.layerComponent.len > 0 : Pool.layerComponent.dequeue() else: LayerComponent()
   component.ordinal = ordinal
   discard this.replaceComponent(int(Component.Layer), component)
   if previousComponent != nil:
-    Pool.layerComponentPool.enqueue(previousComponent)
+    Pool.layerComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeLayer*(this : Entity) : Entity =
   var component = this.layer
   discard this.removeComponent(int(Component.Layer))
-  Pool.layerComponentPool.enqueue(component)
+  Pool.layerComponent.enqueue(component)
   return this
 
 
-proc clearLifeComponentPool*(this : Entity) =
-  Pool.lifeComponentPool = initQueue[LifeComponent]()
+proc clearLifeComponent*(this : Entity) =
+  Pool.lifeComponent = initQueue[LifeComponent]()
 
 ## @type {shmupwarz.LifeComponent} 
 proc life*(this : Entity) : LifeComponent =
@@ -494,35 +486,35 @@ proc hasLife*(this : Entity) : bool =
 
 ##
 ## @param {int} count
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addLife*(this : Entity, count:int) : Entity =
-  var component = if Pool.lifeComponentPool.len > 0 : Pool.lifeComponentPool.dequeue() else: LifeComponent()
+  var component = if Pool.lifeComponent.len > 0 : Pool.lifeComponent.dequeue() else: LifeComponent()
   component.count = count
   discard this.addComponent(int(Component.Life), component)
   return this
 
 ##
 ## @param {int} count
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceLife*(this : Entity, count:int) : Entity =
   var previousComponent = if this.hasLife : this.life else: nil
-  var component = if Pool.lifeComponentPool.len > 0 : Pool.lifeComponentPool.dequeue() else: LifeComponent()
+  var component = if Pool.lifeComponent.len > 0 : Pool.lifeComponent.dequeue() else: LifeComponent()
   component.count = count
   discard this.replaceComponent(int(Component.Life), component)
   if previousComponent != nil:
-    Pool.lifeComponentPool.enqueue(previousComponent)
+    Pool.lifeComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeLife*(this : Entity) : Entity =
   var component = this.life
   discard this.removeComponent(int(Component.Life))
-  Pool.lifeComponentPool.enqueue(component)
+  Pool.lifeComponent.enqueue(component)
   return this
 
 ## @type {boolean} 
@@ -537,15 +529,15 @@ proc `isMine=`*(this : Entity, value : bool) =
 
 ##
 ## @param {boolean} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc setMine*(this : Entity, value : bool) : Entity =
   this.isMine = value
   return this
 
 
-proc clearMouseComponentPool*(this : Entity) =
-  Pool.mouseComponentPool = initQueue[MouseComponent]()
+proc clearMouseComponent*(this : Entity) =
+  Pool.mouseComponent = initQueue[MouseComponent]()
 
 ## @type {shmupwarz.MouseComponent} 
 proc mouse*(this : Entity) : MouseComponent =
@@ -558,10 +550,10 @@ proc hasMouse*(this : Entity) : bool =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addMouse*(this : Entity, x:float64, y:float64) : Entity =
-  var component = if Pool.mouseComponentPool.len > 0 : Pool.mouseComponentPool.dequeue() else: MouseComponent()
+  var component = if Pool.mouseComponent.len > 0 : Pool.mouseComponent.dequeue() else: MouseComponent()
   component.x = x
   component.y = y
   discard this.addComponent(int(Component.Mouse), component)
@@ -570,26 +562,26 @@ proc addMouse*(this : Entity, x:float64, y:float64) : Entity =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceMouse*(this : Entity, x:float64, y:float64) : Entity =
   var previousComponent = if this.hasMouse : this.mouse else: nil
-  var component = if Pool.mouseComponentPool.len > 0 : Pool.mouseComponentPool.dequeue() else: MouseComponent()
+  var component = if Pool.mouseComponent.len > 0 : Pool.mouseComponent.dequeue() else: MouseComponent()
   component.x = x
   component.y = y
   discard this.replaceComponent(int(Component.Mouse), component)
   if previousComponent != nil:
-    Pool.mouseComponentPool.enqueue(previousComponent)
+    Pool.mouseComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeMouse*(this : Entity) : Entity =
   var component = this.mouse
   discard this.removeComponent(int(Component.Mouse))
-  Pool.mouseComponentPool.enqueue(component)
+  Pool.mouseComponent.enqueue(component)
   return this
 
 ## @type {boolean} 
@@ -604,15 +596,15 @@ proc `isPlayer=`*(this : Entity, value : bool) =
 
 ##
 ## @param {boolean} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc setPlayer*(this : Entity, value : bool) : Entity =
   this.isPlayer = value
   return this
 
 
-proc clearPositionComponentPool*(this : Entity) =
-  Pool.positionComponentPool = initQueue[PositionComponent]()
+proc clearPositionComponent*(this : Entity) =
+  Pool.positionComponent = initQueue[PositionComponent]()
 
 ## @type {shmupwarz.PositionComponent} 
 proc position*(this : Entity) : PositionComponent =
@@ -625,10 +617,10 @@ proc hasPosition*(this : Entity) : bool =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addPosition*(this : Entity, x:float64, y:float64) : Entity =
-  var component = if Pool.positionComponentPool.len > 0 : Pool.positionComponentPool.dequeue() else: PositionComponent()
+  var component = if Pool.positionComponent.len > 0 : Pool.positionComponent.dequeue() else: PositionComponent()
   component.x = x
   component.y = y
   discard this.addComponent(int(Component.Position), component)
@@ -637,31 +629,31 @@ proc addPosition*(this : Entity, x:float64, y:float64) : Entity =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replacePosition*(this : Entity, x:float64, y:float64) : Entity =
   var previousComponent = if this.hasPosition : this.position else: nil
-  var component = if Pool.positionComponentPool.len > 0 : Pool.positionComponentPool.dequeue() else: PositionComponent()
+  var component = if Pool.positionComponent.len > 0 : Pool.positionComponent.dequeue() else: PositionComponent()
   component.x = x
   component.y = y
   discard this.replaceComponent(int(Component.Position), component)
   if previousComponent != nil:
-    Pool.positionComponentPool.enqueue(previousComponent)
+    Pool.positionComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removePosition*(this : Entity) : Entity =
   var component = this.position
   discard this.removeComponent(int(Component.Position))
-  Pool.positionComponentPool.enqueue(component)
+  Pool.positionComponent.enqueue(component)
   return this
 
 
-proc clearResourceComponentPool*(this : Entity) =
-  Pool.resourceComponentPool = initQueue[ResourceComponent]()
+proc clearResourceComponent*(this : Entity) =
+  Pool.resourceComponent = initQueue[ResourceComponent]()
 
 ## @type {shmupwarz.ResourceComponent} 
 proc resource*(this : Entity) : ResourceComponent =
@@ -673,40 +665,44 @@ proc hasResource*(this : Entity) : bool =
 
 ##
 ## @param {string} path
-## @returns {entitas.Entity}
+## @param {Sprite} sprite
+## @returns {bosco.Entity}
 ##
-proc addResource*(this : Entity, path:string) : Entity =
-  var component = if Pool.resourceComponentPool.len > 0 : Pool.resourceComponentPool.dequeue() else: ResourceComponent()
+proc addResource*(this : Entity, path:string, sprite:Sprite) : Entity =
+  var component = if Pool.resourceComponent.len > 0 : Pool.resourceComponent.dequeue() else: ResourceComponent()
   component.path = path
+  component.sprite = sprite
   discard this.addComponent(int(Component.Resource), component)
   return this
 
 ##
 ## @param {string} path
-## @returns {entitas.Entity}
+## @param {Sprite} sprite
+## @returns {bosco.Entity}
 ##
-proc replaceResource*(this : Entity, path:string) : Entity =
+proc replaceResource*(this : Entity, path:string, sprite:Sprite) : Entity =
   var previousComponent = if this.hasResource : this.resource else: nil
-  var component = if Pool.resourceComponentPool.len > 0 : Pool.resourceComponentPool.dequeue() else: ResourceComponent()
+  var component = if Pool.resourceComponent.len > 0 : Pool.resourceComponent.dequeue() else: ResourceComponent()
   component.path = path
+  component.sprite = sprite
   discard this.replaceComponent(int(Component.Resource), component)
   if previousComponent != nil:
-    Pool.resourceComponentPool.enqueue(previousComponent)
+    Pool.resourceComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeResource*(this : Entity) : Entity =
   var component = this.resource
   discard this.removeComponent(int(Component.Resource))
-  Pool.resourceComponentPool.enqueue(component)
+  Pool.resourceComponent.enqueue(component)
   return this
 
 
-proc clearScaleAnimationComponentPool*(this : Entity) =
-  Pool.scaleAnimationComponentPool = initQueue[ScaleAnimationComponent]()
+proc clearScaleAnimationComponent*(this : Entity) =
+  Pool.scaleAnimationComponent = initQueue[ScaleAnimationComponent]()
 
 ## @type {shmupwarz.ScaleAnimationComponent} 
 proc scaleAnimation*(this : Entity) : ScaleAnimationComponent =
@@ -722,10 +718,10 @@ proc hasScaleAnimation*(this : Entity) : bool =
 ## @param {float64} speed
 ## @param {bool} repeat
 ## @param {bool} active
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addScaleAnimation*(this : Entity, min:float64, max:float64, speed:float64, repeat:bool, active:bool) : Entity =
-  var component = if Pool.scaleAnimationComponentPool.len > 0 : Pool.scaleAnimationComponentPool.dequeue() else: ScaleAnimationComponent()
+  var component = if Pool.scaleAnimationComponent.len > 0 : Pool.scaleAnimationComponent.dequeue() else: ScaleAnimationComponent()
   component.min = min
   component.max = max
   component.speed = speed
@@ -740,11 +736,11 @@ proc addScaleAnimation*(this : Entity, min:float64, max:float64, speed:float64, 
 ## @param {float64} speed
 ## @param {bool} repeat
 ## @param {bool} active
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceScaleAnimation*(this : Entity, min:float64, max:float64, speed:float64, repeat:bool, active:bool) : Entity =
   var previousComponent = if this.hasScaleAnimation : this.scaleAnimation else: nil
-  var component = if Pool.scaleAnimationComponentPool.len > 0 : Pool.scaleAnimationComponentPool.dequeue() else: ScaleAnimationComponent()
+  var component = if Pool.scaleAnimationComponent.len > 0 : Pool.scaleAnimationComponent.dequeue() else: ScaleAnimationComponent()
   component.min = min
   component.max = max
   component.speed = speed
@@ -752,22 +748,22 @@ proc replaceScaleAnimation*(this : Entity, min:float64, max:float64, speed:float
   component.active = active
   discard this.replaceComponent(int(Component.ScaleAnimation), component)
   if previousComponent != nil:
-    Pool.scaleAnimationComponentPool.enqueue(previousComponent)
+    Pool.scaleAnimationComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeScaleAnimation*(this : Entity) : Entity =
   var component = this.scaleAnimation
   discard this.removeComponent(int(Component.ScaleAnimation))
-  Pool.scaleAnimationComponentPool.enqueue(component)
+  Pool.scaleAnimationComponent.enqueue(component)
   return this
 
 
-proc clearScaleComponentPool*(this : Entity) =
-  Pool.scaleComponentPool = initQueue[ScaleComponent]()
+proc clearScaleComponent*(this : Entity) =
+  Pool.scaleComponent = initQueue[ScaleComponent]()
 
 ## @type {shmupwarz.ScaleComponent} 
 proc scale*(this : Entity) : ScaleComponent =
@@ -780,10 +776,10 @@ proc hasScale*(this : Entity) : bool =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addScale*(this : Entity, x:float64, y:float64) : Entity =
-  var component = if Pool.scaleComponentPool.len > 0 : Pool.scaleComponentPool.dequeue() else: ScaleComponent()
+  var component = if Pool.scaleComponent.len > 0 : Pool.scaleComponent.dequeue() else: ScaleComponent()
   component.x = x
   component.y = y
   discard this.addComponent(int(Component.Scale), component)
@@ -792,31 +788,31 @@ proc addScale*(this : Entity, x:float64, y:float64) : Entity =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceScale*(this : Entity, x:float64, y:float64) : Entity =
   var previousComponent = if this.hasScale : this.scale else: nil
-  var component = if Pool.scaleComponentPool.len > 0 : Pool.scaleComponentPool.dequeue() else: ScaleComponent()
+  var component = if Pool.scaleComponent.len > 0 : Pool.scaleComponent.dequeue() else: ScaleComponent()
   component.x = x
   component.y = y
   discard this.replaceComponent(int(Component.Scale), component)
   if previousComponent != nil:
-    Pool.scaleComponentPool.enqueue(previousComponent)
+    Pool.scaleComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeScale*(this : Entity) : Entity =
   var component = this.scale
   discard this.removeComponent(int(Component.Scale))
-  Pool.scaleComponentPool.enqueue(component)
+  Pool.scaleComponent.enqueue(component)
   return this
 
 
-proc clearScoreComponentPool*(this : Entity) =
-  Pool.scoreComponentPool = initQueue[ScoreComponent]()
+proc clearScoreComponent*(this : Entity) =
+  Pool.scoreComponent = initQueue[ScoreComponent]()
 
 ## @type {shmupwarz.ScoreComponent} 
 proc score*(this : Entity) : ScoreComponent =
@@ -828,40 +824,40 @@ proc hasScore*(this : Entity) : bool =
 
 ##
 ## @param {float64} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addScore*(this : Entity, value:float64) : Entity =
-  var component = if Pool.scoreComponentPool.len > 0 : Pool.scoreComponentPool.dequeue() else: ScoreComponent()
+  var component = if Pool.scoreComponent.len > 0 : Pool.scoreComponent.dequeue() else: ScoreComponent()
   component.value = value
   discard this.addComponent(int(Component.Score), component)
   return this
 
 ##
 ## @param {float64} value
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceScore*(this : Entity, value:float64) : Entity =
   var previousComponent = if this.hasScore : this.score else: nil
-  var component = if Pool.scoreComponentPool.len > 0 : Pool.scoreComponentPool.dequeue() else: ScoreComponent()
+  var component = if Pool.scoreComponent.len > 0 : Pool.scoreComponent.dequeue() else: ScoreComponent()
   component.value = value
   discard this.replaceComponent(int(Component.Score), component)
   if previousComponent != nil:
-    Pool.scoreComponentPool.enqueue(previousComponent)
+    Pool.scoreComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeScore*(this : Entity) : Entity =
   var component = this.score
   discard this.removeComponent(int(Component.Score))
-  Pool.scoreComponentPool.enqueue(component)
+  Pool.scoreComponent.enqueue(component)
   return this
 
 
-proc clearSoundEffectComponentPool*(this : Entity) =
-  Pool.soundEffectComponentPool = initQueue[SoundEffectComponent]()
+proc clearSoundEffectComponent*(this : Entity) =
+  Pool.soundEffectComponent = initQueue[SoundEffectComponent]()
 
 ## @type {shmupwarz.SoundEffectComponent} 
 proc soundEffect*(this : Entity) : SoundEffectComponent =
@@ -873,40 +869,40 @@ proc hasSoundEffect*(this : Entity) : bool =
 
 ##
 ## @param {int} effect
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addSoundEffect*(this : Entity, effect:int) : Entity =
-  var component = if Pool.soundEffectComponentPool.len > 0 : Pool.soundEffectComponentPool.dequeue() else: SoundEffectComponent()
+  var component = if Pool.soundEffectComponent.len > 0 : Pool.soundEffectComponent.dequeue() else: SoundEffectComponent()
   component.effect = effect
   discard this.addComponent(int(Component.SoundEffect), component)
   return this
 
 ##
 ## @param {int} effect
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceSoundEffect*(this : Entity, effect:int) : Entity =
   var previousComponent = if this.hasSoundEffect : this.soundEffect else: nil
-  var component = if Pool.soundEffectComponentPool.len > 0 : Pool.soundEffectComponentPool.dequeue() else: SoundEffectComponent()
+  var component = if Pool.soundEffectComponent.len > 0 : Pool.soundEffectComponent.dequeue() else: SoundEffectComponent()
   component.effect = effect
   discard this.replaceComponent(int(Component.SoundEffect), component)
   if previousComponent != nil:
-    Pool.soundEffectComponentPool.enqueue(previousComponent)
+    Pool.soundEffectComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeSoundEffect*(this : Entity) : Entity =
   var component = this.soundEffect
   discard this.removeComponent(int(Component.SoundEffect))
-  Pool.soundEffectComponentPool.enqueue(component)
+  Pool.soundEffectComponent.enqueue(component)
   return this
 
 
-proc clearVelocityComponentPool*(this : Entity) =
-  Pool.velocityComponentPool = initQueue[VelocityComponent]()
+proc clearVelocityComponent*(this : Entity) =
+  Pool.velocityComponent = initQueue[VelocityComponent]()
 
 ## @type {shmupwarz.VelocityComponent} 
 proc velocity*(this : Entity) : VelocityComponent =
@@ -919,10 +915,10 @@ proc hasVelocity*(this : Entity) : bool =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc addVelocity*(this : Entity, x:float64, y:float64) : Entity =
-  var component = if Pool.velocityComponentPool.len > 0 : Pool.velocityComponentPool.dequeue() else: VelocityComponent()
+  var component = if Pool.velocityComponent.len > 0 : Pool.velocityComponent.dequeue() else: VelocityComponent()
   component.x = x
   component.y = y
   discard this.addComponent(int(Component.Velocity), component)
@@ -931,26 +927,26 @@ proc addVelocity*(this : Entity, x:float64, y:float64) : Entity =
 ##
 ## @param {float64} x
 ## @param {float64} y
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc replaceVelocity*(this : Entity, x:float64, y:float64) : Entity =
   var previousComponent = if this.hasVelocity : this.velocity else: nil
-  var component = if Pool.velocityComponentPool.len > 0 : Pool.velocityComponentPool.dequeue() else: VelocityComponent()
+  var component = if Pool.velocityComponent.len > 0 : Pool.velocityComponent.dequeue() else: VelocityComponent()
   component.x = x
   component.y = y
   discard this.replaceComponent(int(Component.Velocity), component)
   if previousComponent != nil:
-    Pool.velocityComponentPool.enqueue(previousComponent)
+    Pool.velocityComponent.enqueue(previousComponent)
 
   return this
 
 ##
-## @returns {entitas.Entity}
+## @returns {bosco.Entity}
 ##
 proc removeVelocity*(this : Entity) : Entity =
   var component = this.velocity
   discard this.removeComponent(int(Component.Velocity))
-  Pool.velocityComponentPool.enqueue(component)
+  Pool.velocityComponent.enqueue(component)
   return this
 
 

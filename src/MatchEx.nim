@@ -6,187 +6,165 @@
 import bosco/ECS
 import ComponentEx
 type TMatch = ref object of RootObj
-
-
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchBounds : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchBullet : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchColorAnimation : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchDestroy : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchEnemy : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchExpires : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchFiring : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchHealth : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchLayer : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchLife : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchMine : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchMouse : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchPlayer : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchPosition : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchResource : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchScaleAnimation : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchScale : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchScore : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchSoundEffect : Matcher
-  ## @type {entitas.Match} 
+  ## @type {bosco.Match} 
   matchVelocity : Matcher
 
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Bounds*(this : TMatch) : Matcher =
   if this.matchBounds == nil:
     this.matchBounds = MatchAllOf(@[int(Component.Bounds)])
   return this.matchBounds
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Bullet*(this : TMatch) : Matcher =
   if this.matchBullet == nil:
     this.matchBullet = MatchAllOf(@[int(Component.Bullet)])
   return this.matchBullet
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc ColorAnimation*(this : TMatch) : Matcher =
   if this.matchColorAnimation == nil:
     this.matchColorAnimation = MatchAllOf(@[int(Component.ColorAnimation)])
   return this.matchColorAnimation
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Destroy*(this : TMatch) : Matcher =
   if this.matchDestroy == nil:
     this.matchDestroy = MatchAllOf(@[int(Component.Destroy)])
   return this.matchDestroy
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Enemy*(this : TMatch) : Matcher =
   if this.matchEnemy == nil:
     this.matchEnemy = MatchAllOf(@[int(Component.Enemy)])
   return this.matchEnemy
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Expires*(this : TMatch) : Matcher =
   if this.matchExpires == nil:
     this.matchExpires = MatchAllOf(@[int(Component.Expires)])
   return this.matchExpires
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Firing*(this : TMatch) : Matcher =
   if this.matchFiring == nil:
     this.matchFiring = MatchAllOf(@[int(Component.Firing)])
   return this.matchFiring
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Health*(this : TMatch) : Matcher =
   if this.matchHealth == nil:
     this.matchHealth = MatchAllOf(@[int(Component.Health)])
   return this.matchHealth
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Layer*(this : TMatch) : Matcher =
   if this.matchLayer == nil:
     this.matchLayer = MatchAllOf(@[int(Component.Layer)])
   return this.matchLayer
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Life*(this : TMatch) : Matcher =
   if this.matchLife == nil:
     this.matchLife = MatchAllOf(@[int(Component.Life)])
   return this.matchLife
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Mine*(this : TMatch) : Matcher =
   if this.matchMine == nil:
     this.matchMine = MatchAllOf(@[int(Component.Mine)])
   return this.matchMine
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Mouse*(this : TMatch) : Matcher =
   if this.matchMouse == nil:
     this.matchMouse = MatchAllOf(@[int(Component.Mouse)])
   return this.matchMouse
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Player*(this : TMatch) : Matcher =
   if this.matchPlayer == nil:
     this.matchPlayer = MatchAllOf(@[int(Component.Player)])
   return this.matchPlayer
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Position*(this : TMatch) : Matcher =
   if this.matchPosition == nil:
     this.matchPosition = MatchAllOf(@[int(Component.Position)])
   return this.matchPosition
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Resource*(this : TMatch) : Matcher =
   if this.matchResource == nil:
     this.matchResource = MatchAllOf(@[int(Component.Resource)])
   return this.matchResource
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc ScaleAnimation*(this : TMatch) : Matcher =
   if this.matchScaleAnimation == nil:
     this.matchScaleAnimation = MatchAllOf(@[int(Component.ScaleAnimation)])
   return this.matchScaleAnimation
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Scale*(this : TMatch) : Matcher =
   if this.matchScale == nil:
     this.matchScale = MatchAllOf(@[int(Component.Scale)])
   return this.matchScale
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Score*(this : TMatch) : Matcher =
   if this.matchScore == nil:
     this.matchScore = MatchAllOf(@[int(Component.Score)])
   return this.matchScore
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc SoundEffect*(this : TMatch) : Matcher =
   if this.matchSoundEffect == nil:
     this.matchSoundEffect = MatchAllOf(@[int(Component.SoundEffect)])
   return this.matchSoundEffect
 
-
-## @type {entitas.Matcher} 
+## @type {bosco.Matcher} 
 proc Velocity*(this : TMatch) : Matcher =
   if this.matchVelocity == nil:
     this.matchVelocity = MatchAllOf(@[int(Component.Velocity)])
   return this.matchVelocity
-
 var Match* = TMatch()
 

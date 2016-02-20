@@ -2,10 +2,6 @@
   "namespace": "shmupwarz",
   "src": "src",
   "output": {
-    "javascript": "web/src/example/generatedExtensions.js",
-    "typescript": "example/src/generatedComponents.ts",
-    "declaration": "example/ext/example.d.ts",
-    "vala":"gen/"
   },
   "alloc": {
     "entities": 200,
@@ -62,7 +58,8 @@
       "y:float64"
     ],
     "Resource": [
-      "path:string"
+      "path:string",
+      "sprite:Sprite"
     ],
     "ScaleAnimation": [
       "min:float64",

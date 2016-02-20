@@ -22,6 +22,8 @@ proc newGroup*(matcher : Matcher): Group =
 proc count*(this : Group) : int = return this.entities.len
 
 proc constructor*(this : Group, matcher : Matcher): void =
+  this.onAddEntity = initEventHandler("onAddEntity")
+  this.onRemoveEntity = initEventHandler("onRemoveEntity")
   this.entities = initTable[int, Entity]()
   this.entitiesCache = @[]
   this.matcher = matcher
@@ -47,6 +49,7 @@ proc addEntity(this : Group, entity : Entity, index : int, component : IComponen
     this.entitiesCache = nil
     this.singleEntityCache = nil
     entity.addRef()
+    EventEmitter.emit(this.onAddEntity, newEntityArgs(entity, index, component))
 
 proc removeEntity(this : Group, entity : Entity, index : int, component : IComponent): void =
   if this.entities.hasKey(entity.id):
@@ -54,6 +57,7 @@ proc removeEntity(this : Group, entity : Entity, index : int, component : ICompo
     this.entitiesCache = nil
     this.singleEntityCache = nil
     entity.release()
+    EventEmitter.emit(this.onRemoveEntity, newEntityArgs(entity, index, component))
 
 proc handleEntitySilently(this : Group, entity : Entity): void =
   if this.matcher.matches(entity):

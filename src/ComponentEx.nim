@@ -95,6 +95,7 @@ type
 
   ResourceComponent* = ref object of IComponent
     path* : string
+    sprite* : Sprite
 
   ScaleAnimationComponent* = ref object of IComponent
     min* : float64

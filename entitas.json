@@ -1,0 +1,96 @@
+{
+  "namespace": "shmupwarz",
+  "src": "src",
+  "output": {
+    "javascript": "web/src/example/generatedExtensions.js",
+    "typescript": "example/src/generatedComponents.ts",
+    "declaration": "example/ext/example.d.ts",
+    "vala":"gen/"
+  },
+  "alloc": {
+    "entities": 200,
+    "components": 128
+  },
+  "components": {
+    "Bounds": [
+      "radius:float64"
+    ],
+    "Bullet": false,
+    "ColorAnimation": [
+      "redMin:float64",
+      "redMax:float64",
+      "redSpeed:float64",
+      "greenMin:float64",
+      "greenMax:float64",
+      "greenSpeed:float64",
+      "blueMin:float64",
+      "blueMax:float64",
+      "blueSpeed:float64",
+      "alphaMin:float64",
+      "alphaMax:float64",
+      "alphaSpeed:float64",
+      "redAnimate:bool",
+      "greenAnimate:bool",
+      "blueAnimate:bool",
+      "alphaAnimate:bool",
+      "repeat:bool"
+    ],
+    "Destroy": false,
+    "Enemy": false,
+    "Expires": [
+      "delay:float64"
+    ],
+    "Firing": false,
+    "Health": [
+      "health:float64",
+      "maximumHealth:float64"
+    ],
+    "Layer": [
+      "ordinal:int"
+    ],
+    "Life": [
+      "count:int"
+    ],
+    "Mine" : false,
+    "Mouse": [
+      "x:float64",
+      "y:float64"
+    ],
+    "Player": false,
+    "Position": [
+      "x:float64",
+      "y:float64"
+    ],
+    "Resource": [
+      "path:string"
+    ],
+    "ScaleAnimation": [
+      "min:float64",
+      "max:float64",
+      "speed:float64",
+      "repeat:bool",
+      "active:bool"
+    ],
+    "Scale": [
+      "x:float64",
+      "y:float64"
+    ],
+    "Score": [
+      "value:float64"
+    ],
+    "SoundEffect": [
+      "effect:int"
+    ],
+    "Velocity": [
+      "x:float64",
+      "y:float64"
+    ]
+  },
+  "systems": {},
+  "entities": {
+    "Score": true,
+    "Mouse": true,
+    "Firing": true
+  },
+  "extensions": {}
+}

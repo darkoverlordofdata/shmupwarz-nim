@@ -2,7 +2,7 @@ import sdl2
 import sdl2/image
 import sdl2/ttf
 import Sprite
-
+import strfmt
 type
   AbstractGame* = ref object of RootObj
     name* : string
@@ -11,24 +11,40 @@ type
     running* : bool
     window* : WindowPtr
     renderer* : RendererPtr
+    font* : FontPtr
     sprites* : seq[Sprite]
     currentKeyStates* : ptr array[0..512, uint8]
     delta* : float64
     ticks* : uint32
     lastTick : uint32
+    showFps : bool
+    fpsTimes : array[0..14, int]
+    fpsTimeLast : int
+    fpsCount : int
+    fpsTickLast : int
+    fpsSprite : Sprite
+    fpsBg : Color
+    fpsFg : Color
+    fpsSrcRect : Rect
+    fpsDstRect : Rect
 
 proc init_sdl(this : AbstractGame)
-method start*(this : AbstractGame) {.base.}
 proc render*(this : AbstractGame)
+proc get_fps(this : AbstractGame) : Sprite
+method start*(this : AbstractGame) {.base.}
 method event*(this : AbstractGame, evt : Event) {.base.}
 method update*(this : AbstractGame, delta : float64) {.base.}
 method cleanup*(this : AbstractGame) {.base.}
 method initialize*(this : AbstractGame)
 
+const FONT_PATH = "res/fonts/skranji.regular.ttf"
+const FONT_SIZE = 16
+
 proc init_sdl(this : AbstractGame) =
   ## Initialize SDL layer
   discard sdl2.init(INIT_EVERYTHING)
   discard image.init(IMG_INIT_PNG)
+  discard ttf.ttfInit()
 
   this.window = createWindow(this.name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this.width, this.height, SDL_WINDOW_SHOWN)
   if this.window == nil:
@@ -39,6 +55,27 @@ proc init_sdl(this : AbstractGame) =
   if this.renderer == nil:
       echo "Error creating SDL_Renderer: ", getError()
       quit 1
+
+  this.font = ttf.openFont(FONT_PATH, FONT_SIZE)
+  if this.font == nil:
+      echo "Error creating SDL_Font: ", getError()
+      quit 1
+
+  ## setup for FPS display
+  this.showFps = true
+  this.fpsTimes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+  this.fpsFg.r = 255
+  this.fpsFg.g = 255
+  this.fpsFg.b = 255
+  this.fpsFg.a = 255
+  this.fpsBg.r = 0
+  this.fpsBg.g = 0
+  this.fpsBg.b = 0
+  this.fpsBg.a = 0
+  let su = this.font.renderText("fps: 99.99", this.fpsFg, this.fpsBg)
+  this.fpsSrcRect = rect(0, 0, (cint)su.w, (cint)su.h)
+  this.fpsDstRect = rect(0, 0, (cint)su.w, (cint)su.h)
+
 
 method start*(this : AbstractGame) =
   ## Start the game
@@ -63,12 +100,32 @@ method start*(this : AbstractGame) =
   destroy this.window
   this.cleanup()
 
+##
+## Create a sprite with the current FPS value
+##
+proc get_fps(this : AbstractGame) : Sprite =
+  let frametimesindex = this.fpsCount mod this.fpsTimes.len
+  this.fpsTimes[frametimesindex] = int(this.ticks) - this.fpsTimeLast
+  this.fpsTimeLast = int(this.ticks)
+  this.fpsCount += 1
+  var total:int = 0
+  for i in 0..14:
+    total += this.fpsTimes[i]
+  let value:float64 = 1000.0  / (total / 15)
+  let s = value.format("02.2f")
+  this.fpsTickLast = int(this.ticks)
+  if this.fpsCount mod this.fpsTimes.len == 0 or this.fpsSprite == nil:
+    this.fpsSprite = SpriteFromText(this.renderer, s, this.font, this.fpsFg, this.fpsBg)
+    this.fpsSprite.centered = false
+  return this.fpsSprite
+
 proc render*(this : AbstractGame) =
   ## Render the frame
   this.renderer.setDrawColor(0, 0, 0, 255)
   this.renderer.clear()
   for sprite in this.sprites:
     sprite.render(this.renderer)
+  if this.showFps: this.get_fps().render(this.renderer)
   this.renderer.present()
 
 method initialize*(this : AbstractGame) =

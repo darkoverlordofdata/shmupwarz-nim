@@ -44,7 +44,8 @@ proc onEntityReleased*(this: World, entity : Entity) : void  =
     raise newException(OSError, "EntityIsNotDestroyedException -Cannot release entity.")
 
   this.retainedEntities.del(entity.id)
-  this.reusableEntities.enqueue(entity)
+  ## TODO fix this - adding bogus entities
+  #this.reusableEntities.enqueue(entity)
 
 proc onEntityChanged*(this: World, entity : Entity, index : int, component : IComponent) : void =
   if this.groupsForIndex.hasKey(index):
@@ -61,13 +62,20 @@ proc destroyEntity*(this: World, entity : Entity): void =
   this.entitiesCache = nil
   entity.destroy()
   if entity.refCount == 1:
-    this.reusableEntities.add(entity)
+    this.reusableEntities.enqueue(entity)
   else:
     this.retainedEntities[entity.id] = entity
   entity.release()
 
 proc createEntity*(this: World, name : string): Entity =
-  var entity = if this.reusableEntities.len > 0 : this.reusableEntities.dequeue() else : newEntity(this.totalComponents)
+  #var entity = if this.reusableEntities.len > 0 : this.reusableEntities.dequeue() else : newEntity(this.totalComponents)
+  var entity : Entity
+  if this.reusableEntities.len > 0 :
+    entity = this.reusableEntities.dequeue()
+    #entity = newEntity(this.totalComponents)
+  else :
+    entity = newEntity(this.totalComponents)
+
   this.creationIndex+=1
   entity.initialize(this, name, generateUUID(), this.creationIndex)
   this.entities[entity.id] = entity

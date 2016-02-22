@@ -1,5 +1,5 @@
   "cmd": "/home/bruce/Applications/nim-0.13.0/bin/nim"
-  "args": ["--out:build/main", "compile", "src/main", "&&", "src/build/main"]
+  "args": ["--define:release", "--out:build/main", "compile", "src/main", "&&", "src/build/main"]
   "sh": true
   "cwd": "/home/bruce/Git/shmupwarz-nim"
   "errorMatch": [

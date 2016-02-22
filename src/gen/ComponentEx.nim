@@ -60,7 +60,7 @@ type
     repeat* : bool
 
   DestroyComponent* = ref object of IComponent
-    destroy* : bool
+    active* : bool
 
   EnemyComponent* = ref object of IComponent
     enemy* : bool
@@ -98,6 +98,7 @@ type
   ResourceComponent* = ref object of IComponent
     path* : string
     sprite* : Sprite
+    bgd* : bool
 
   ScaleAnimationComponent* = ref object of IComponent
     min* : float64
@@ -128,7 +129,7 @@ type
     boundsComponent* : Queue[BoundsComponent]
     bulletComponent* : BulletComponent
     colorAnimationComponent* : Queue[ColorAnimationComponent]
-    destroyComponent* : DestroyComponent
+    destroyComponent* : Queue[DestroyComponent]
     enemyComponent* : EnemyComponent
     expiresComponent* : Queue[ExpiresComponent]
     firingComponent* : FiringComponent
@@ -162,7 +163,9 @@ proc newPoolObj() : PoolObj =
   for i in 1..POOL_SIZE:
     result.colorAnimationComponent.add(ColorAnimationComponent())
 
-  result.destroyComponent = DestroyComponent()
+  result.destroyComponent = initQueue[DestroyComponent]()
+  for i in 1..POOL_SIZE:
+    result.destroyComponent.add(DestroyComponent())
 
   result.enemyComponent = EnemyComponent()
 

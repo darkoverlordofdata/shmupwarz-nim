@@ -31,7 +31,9 @@
       "alphaAnimate:bool",
       "repeat:bool"
     ],
-    "Destroy": false,
+    "Destroy": [
+      "active:bool"
+    ],
     "Enemy": false,
     "Expires": [
       "delay:float64"
@@ -59,7 +61,8 @@
     ],
     "Resource": [
       "path:string",
-      "sprite:Sprite"
+      "sprite:Sprite",
+      "bgd:bool"
     ],
     "ScaleAnimation": [
       "min:float64",

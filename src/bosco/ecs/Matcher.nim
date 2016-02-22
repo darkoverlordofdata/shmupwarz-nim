@@ -3,6 +3,7 @@
 ##
 proc MatchAllOf*(args : seq[int]) : Matcher
 proc MatchAnyOf*(args : seq[int]) : Matcher
+proc MergeIndices(args : seq[Matcher]) : seq[int]
 proc newMatcher*() : Matcher
 proc anyOf*(this: Matcher, args : seq[int]) : Matcher
 proc indices*(this: Matcher) : seq[int]
@@ -73,10 +74,21 @@ proc matches*(this: Matcher, entity : Entity) : bool =
   var matchesNoneOf = if this.noneOfIndices.len == 0 : true else : not entity.hasAnyComponent(this.noneOfIndices)
   return matchesAllOf and matchesAnyOf and matchesNoneOf
 
+proc MergeIndices(args: seq[Matcher]) : seq[int] =
+  result = @[]
+  for matcher in args:
+    if matcher.indices.len != 1:
+      raise newException(OSError, "matcher.indices.length must be 1")
+    result.add matcher.indices[0]
+
 proc MatchAllOf*(args : seq[int]) : Matcher =
   ## Matches allOf the components/indices specified
   result = newMatcher()
   result.allOfIndices = deduplicate(args)
+
+proc MatchAllOf*(args : seq[Matcher]) : Matcher =
+  ## Matches allOf the components/indices specified
+  MatchAllOf(MergeIndices(args))
 
 proc MatchAnyOf*(args : seq[int]) : Matcher =
   ## Matches anyOf the components/indices specified

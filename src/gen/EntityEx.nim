@@ -184,22 +184,49 @@ proc removeColorAnimation*(this : Entity) : Entity =
   Pool.colorAnimationComponent.enqueue(component)
   return this
 
+
+proc clearDestroyComponent*(this : Entity) =
+  Pool.destroyComponent = initQueue[DestroyComponent]()
+
+## @type {shmupwarz.DestroyComponent} 
+proc destroy*(this : Entity) : DestroyComponent =
+  (DestroyComponent)this.getComponent(int(Component.Destroy))
+
 ## @type {boolean} 
-proc isDestroy*(this : Entity) : bool =
+proc hasDestroy*(this : Entity) : bool =
   this.hasComponent(int(Component.Destroy))
-proc `isDestroy=`*(this : Entity, value : bool) =
-  if value != this.isDestroy:
-    if value:
-      discard this.addComponent(int(Component.Destroy), Pool.destroyComponent)
-    else:
-      discard this.removeComponent(int(Component.Destroy))
 
 ##
-## @param {boolean} value
+## @param {bool} active
 ## @returns {bosco.Entity}
 ##
-proc setDestroy*(this : Entity, value : bool) : Entity =
-  this.isDestroy = value
+proc addDestroy*(this : Entity, active:bool) : Entity =
+  var component = if Pool.destroyComponent.len > 0 : Pool.destroyComponent.dequeue() else: DestroyComponent()
+  component.active = active
+  discard this.addComponent(int(Component.Destroy), component)
+  return this
+
+##
+## @param {bool} active
+## @returns {bosco.Entity}
+##
+proc replaceDestroy*(this : Entity, active:bool) : Entity =
+  var previousComponent = if this.hasDestroy : this.destroy else: nil
+  var component = if Pool.destroyComponent.len > 0 : Pool.destroyComponent.dequeue() else: DestroyComponent()
+  component.active = active
+  discard this.replaceComponent(int(Component.Destroy), component)
+  if previousComponent != nil:
+    Pool.destroyComponent.enqueue(previousComponent)
+
+  return this
+
+##
+## @returns {bosco.Entity}
+##
+proc removeDestroy*(this : Entity) : Entity =
+  var component = this.destroy
+  discard this.removeComponent(int(Component.Destroy))
+  Pool.destroyComponent.enqueue(component)
   return this
 
 ## @type {boolean} 
@@ -571,25 +598,29 @@ proc hasResource*(this : Entity) : bool =
 ##
 ## @param {string} path
 ## @param {Sprite} sprite
+## @param {bool} bgd
 ## @returns {bosco.Entity}
 ##
-proc addResource*(this : Entity, path:string, sprite:Sprite) : Entity =
+proc addResource*(this : Entity, path:string, sprite:Sprite, bgd:bool) : Entity =
   var component = if Pool.resourceComponent.len > 0 : Pool.resourceComponent.dequeue() else: ResourceComponent()
   component.path = path
   component.sprite = sprite
+  component.bgd = bgd
   discard this.addComponent(int(Component.Resource), component)
   return this
 
 ##
 ## @param {string} path
 ## @param {Sprite} sprite
+## @param {bool} bgd
 ## @returns {bosco.Entity}
 ##
-proc replaceResource*(this : Entity, path:string, sprite:Sprite) : Entity =
+proc replaceResource*(this : Entity, path:string, sprite:Sprite, bgd:bool) : Entity =
   var previousComponent = if this.hasResource : this.resource else: nil
   var component = if Pool.resourceComponent.len > 0 : Pool.resourceComponent.dequeue() else: ResourceComponent()
   component.path = path
   component.sprite = sprite
+  component.bgd = bgd
   discard this.replaceComponent(int(Component.Resource), component)
   if previousComponent != nil:
     Pool.resourceComponent.enqueue(previousComponent)

@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>3.9.4</string>
         <key>fileName</key>
-        <string>/home/bruce/Git/schmupwarz/lib/res/images.tps</string>
+        <string>/home/bruce/Git/entitas/example/res/images.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -76,7 +76,7 @@
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
-        <uint>0</uint>
+        <uint>1</uint>
         <key>webpQualityLevel</key>
         <uint>101</uint>
         <key>textureSubPath</key>
@@ -191,22 +191,13 @@
         <key>fileList</key>
         <array>
             <filename>images/bullet.png</filename>
-            <filename>images/d16a.png</filename>
             <filename>images/enemy1.png</filename>
             <filename>images/enemy2.png</filename>
             <filename>images/enemy3.png</filename>
             <filename>images/explosion.png</filename>
             <filename>images/fighter.png</filename>
-            <filename>images/life.png</filename>
-            <filename>images/logo.png</filename>
-            <filename>images/mine1.png</filename>
-            <filename>images/mine2.png</filename>
-            <filename>images/panel.png</filename>
             <filename>images/particle.png</filename>
-            <filename>images/powerup.png</filename>
             <filename>images/star.png</filename>
-            <filename>images/status_red.png</filename>
-            <filename>images/status_yellow.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

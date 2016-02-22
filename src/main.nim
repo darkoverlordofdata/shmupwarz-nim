@@ -1,3 +1,3 @@
 import shmupwarz/Game
 
-newGame("My Game", 320, 480).play()
+newGame("My Game", 640, 480).play()

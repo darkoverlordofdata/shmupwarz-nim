@@ -24,6 +24,8 @@ proc onEntityReleased*(this: World, entity : Entity) : void
 ##
 proc newEntity*(totalComponents : int = 32): Entity =
   new(result)
+  EntityInstanceIndex += 1
+  result.id = EntityInstanceIndex
   result.totalComponents = totalComponents
 
 proc initialize*(this: Entity, owner : World, name : string, uuid : string, creationIndex : int): void =
@@ -41,6 +43,7 @@ proc addComponent*(this: Entity, index : int, component : IComponent) : Entity =
   if not this.isEnabled:
     raise newException(OSError, "EntityIsNotEnabledException - Cannot add component!")
   if this.hasComponent(index):
+    echo $this
     raise newException(OSError, interp"EntityAlreadyHasComponentException - Cannot add ${WorldComponentsEnum[index]} at index ${index}")
   this.components[index] = component
   this.componentsCache = nil
@@ -130,6 +133,9 @@ proc removeAllComponents*(this: Entity) : void =
 
 proc destroy*(this: Entity) : void =
   this.removeAllComponents()
+  this.componentIndicesCache = @[]
+  this.componentsCache = @[]
+  this.name = ""
   this.isEnabled = false
 
 proc `$`*(this: Entity) : string =

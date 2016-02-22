@@ -3,7 +3,7 @@ import sdl2/image
 import sdl2/ttf
 
 type
-  Scale* = ref object of RootObj
+  Scale* = object of RootObj
     x* : float64
     y* : float64
 
@@ -17,6 +17,7 @@ type
     centered* : bool
     layer* : int
     id* : int
+    path* : string
 
 var
   SpriteUniqueId : int = 0
@@ -33,11 +34,16 @@ proc SpriteFromFile*(renderer : RendererPtr, path : string) : Sprite =
     else:
       SpriteUniqueId += 1
       result.id = SpriteUniqueId
+      result.path = path
       result.texture.setTextureBlendMode BlendMode_Blend
       result.height = loadedSurface.h
       result.width = loadedSurface.w
+      result.scale.x = 1
+      result.scale.y = 1
 
 proc SpriteFromText*(renderer : RendererPtr, text : string, font : FontPtr, fg : Color, bg : Color) : Sprite =
+  assert font != nil
+
   let textSurface = font.renderText(text, fg, bg)
   if textSurface == nil:
     echo "Unable to render text surface: ", text
@@ -51,6 +57,8 @@ proc SpriteFromText*(renderer : RendererPtr, text : string, font : FontPtr, fg :
       result.id = SpriteUniqueId
       result.width = textSurface.w
       result.height = textSurface.h
+      result.scale.x = 1
+      result.scale.y = 1
 
 proc setText*(this : Sprite, renderer : RendererPtr, text : string, font : FontPtr, fg : Color, bg : Color) : Sprite =
   let textSurface = font.renderText(text, fg, bg)
@@ -66,8 +74,10 @@ proc setText*(this : Sprite, renderer : RendererPtr, text : string, font : FontP
 
 
 proc render*(this : Sprite, renderer : RendererPtr) =
-  let x1 = if this.centered: this.x-(int(this.width/2)) else: this.x
-  let y1 = if this.centered: this.y-(int(this.height/2)) else: this.y
-  var src = rect(0, 0, cint(this.width), cint(this.height))
-  var dst = rect(cint(x1), cint(y1), cint(this.width), cint(this.height))
+  let w = float64(this.width) * this.scale.x
+  let h = float64(this.height) * this.scale.y
+  let x1 = if this.centered: this.x-(int(w/2)) else: this.x
+  let y1 = if this.centered: this.y-(int(h/2)) else: this.y
+  var src = rect(0, 0, cint(w), cint(h))
+  var dst = rect(cint(x1), cint(y1), cint(w), cint(h))
   renderer.copy this.texture, addr(src), addr(dst)

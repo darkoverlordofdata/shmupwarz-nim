@@ -74,8 +74,8 @@ proc containsEntity(this : Group, entity : Entity) : bool =
 proc getEntities*(this : Group) : seq[Entity] =
   if this.entitiesCache.len == 0:
     this.entitiesCache = @[]
-    for i in 0..this.entities.len-1:
-      this.entitiesCache.add(this.entities[i])
+    for entity in this.entities.values:
+      this.entitiesCache.add entity
 
   return this.entitiesCache
 

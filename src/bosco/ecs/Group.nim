@@ -95,6 +95,6 @@ proc `$`*(this : Group) : string =
   if this.toStringCache == nil:
     var sb : seq[string] = @[]
     for index in this.matcher.indices:
-      sb.add WorldComponentsEnum[index-1] #.replace("Component", "")
+      sb.add WorldComponentsEnum[index] #.replace("Component", "")
     this.toStringCache =  "Group(" & sb.join(",") & ")"
   return this.toStringCache

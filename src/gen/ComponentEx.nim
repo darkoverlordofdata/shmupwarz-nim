@@ -38,7 +38,7 @@ type
     radius* : float64
 
   BulletComponent* = ref object of IComponent
-    bullet* : bool
+    active* : bool
 
   ColorAnimationComponent* = ref object of IComponent
     redMin* : float64
@@ -63,7 +63,7 @@ type
     active* : bool
 
   EnemyComponent* = ref object of IComponent
-    enemy* : bool
+    active* : bool
 
   ExpiresComponent* = ref object of IComponent
     delay* : float64
@@ -127,10 +127,10 @@ type
   ##
   PoolObj = ref object of RootObj
     boundsComponent* : Queue[BoundsComponent]
-    bulletComponent* : BulletComponent
+    bulletComponent* : Queue[BulletComponent]
     colorAnimationComponent* : Queue[ColorAnimationComponent]
     destroyComponent* : Queue[DestroyComponent]
-    enemyComponent* : EnemyComponent
+    enemyComponent* : Queue[EnemyComponent]
     expiresComponent* : Queue[ExpiresComponent]
     firingComponent* : FiringComponent
     healthComponent* : Queue[HealthComponent]
@@ -157,7 +157,9 @@ proc newPoolObj() : PoolObj =
   for i in 1..POOL_SIZE:
     result.boundsComponent.add(BoundsComponent())
 
-  result.bulletComponent = BulletComponent()
+  result.bulletComponent = initQueue[BulletComponent]()
+  for i in 1..POOL_SIZE:
+    result.bulletComponent.add(BulletComponent())
 
   result.colorAnimationComponent = initQueue[ColorAnimationComponent]()
   for i in 1..POOL_SIZE:
@@ -167,7 +169,9 @@ proc newPoolObj() : PoolObj =
   for i in 1..POOL_SIZE:
     result.destroyComponent.add(DestroyComponent())
 
-  result.enemyComponent = EnemyComponent()
+  result.enemyComponent = initQueue[EnemyComponent]()
+  for i in 1..POOL_SIZE:
+    result.enemyComponent.add(EnemyComponent())
 
   result.expiresComponent = initQueue[ExpiresComponent]()
   for i in 1..POOL_SIZE:

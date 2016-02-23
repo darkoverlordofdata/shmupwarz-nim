@@ -27,6 +27,7 @@ type
     fpsFg : Color
     fpsSrcRect : Rect
     fpsDstRect : Rect
+    lastCount : int
 
 proc init_sdl(this : AbstractGame)
 proc render*(this : AbstractGame)

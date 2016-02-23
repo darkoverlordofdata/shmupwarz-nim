@@ -35,6 +35,7 @@ proc SpriteFromFile*(renderer : RendererPtr, path : string) : Sprite =
       SpriteUniqueId += 1
       result.id = SpriteUniqueId
       result.path = path
+      result.centered = true
       result.texture.setTextureBlendMode BlendMode_Blend
       result.height = loadedSurface.h
       result.width = loadedSurface.w

@@ -11,7 +11,9 @@
     "Bounds": [
       "radius:float64"
     ],
-    "Bullet": false,
+    "Bullet": [
+      "active:bool"
+    ],
     "ColorAnimation": [
       "redMin:float64",
       "redMax:float64",
@@ -34,7 +36,9 @@
     "Destroy": [
       "active:bool"
     ],
-    "Enemy": false,
+    "Enemy": [
+      "active:bool"
+    ],
     "Expires": [
       "delay:float64"
     ],

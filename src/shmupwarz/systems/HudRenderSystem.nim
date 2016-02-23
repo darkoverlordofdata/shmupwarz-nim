@@ -1,6 +1,19 @@
 ##
 ## HudRenderSystem
 ##
+type HudRenderSystem* = ref object of System
+  game* : Game
+  group* : Group
+  font : FontPtr
+  fg : Color
+  bg : Color
+  activeEntities : Sprite
+  totalRetained : Sprite
+  totalReusable : Sprite
+
+##
+## Create new HudRenderSystem
+##
 const ACTIVE_ENTITIES : string  = "Active entities:         "
 const TOTAL_RETAINED : string   = "Total reusable:          "
 const TOTAL_REUSABLE : string   = "Total retained:          "

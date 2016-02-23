@@ -29,7 +29,7 @@ proc indices*(this: Matcher) : seq[int] =
 proc componentsToString(a : seq[int]) : string =
   var sb : seq[string] = @[]
   for index in a:
-    sb.add $WorldComponentsEnum[index-1]
+    sb.add $WorldComponentsEnum[index]
   return sb.join(",")
 
 proc `$`*(this : Matcher) : string =

@@ -57,22 +57,49 @@ proc removeBounds*(this : Entity) : Entity =
   Pool.boundsComponent.enqueue(component)
   return this
 
+
+proc clearBulletComponent*(this : Entity) =
+  Pool.bulletComponent = initQueue[BulletComponent]()
+
+## @type {shmupwarz.BulletComponent} 
+proc bullet*(this : Entity) : BulletComponent =
+  (BulletComponent)this.getComponent(int(Component.Bullet))
+
 ## @type {boolean} 
-proc isBullet*(this : Entity) : bool =
+proc hasBullet*(this : Entity) : bool =
   this.hasComponent(int(Component.Bullet))
-proc `isBullet=`*(this : Entity, value : bool) =
-  if value != this.isBullet:
-    if value:
-      discard this.addComponent(int(Component.Bullet), Pool.bulletComponent)
-    else:
-      discard this.removeComponent(int(Component.Bullet))
 
 ##
-## @param {boolean} value
+## @param {bool} active
 ## @returns {bosco.Entity}
 ##
-proc setBullet*(this : Entity, value : bool) : Entity =
-  this.isBullet = value
+proc addBullet*(this : Entity, active:bool) : Entity =
+  var component = if Pool.bulletComponent.len > 0 : Pool.bulletComponent.dequeue() else: BulletComponent()
+  component.active = active
+  discard this.addComponent(int(Component.Bullet), component)
+  return this
+
+##
+## @param {bool} active
+## @returns {bosco.Entity}
+##
+proc replaceBullet*(this : Entity, active:bool) : Entity =
+  var previousComponent = if this.hasBullet : this.bullet else: nil
+  var component = if Pool.bulletComponent.len > 0 : Pool.bulletComponent.dequeue() else: BulletComponent()
+  component.active = active
+  discard this.replaceComponent(int(Component.Bullet), component)
+  if previousComponent != nil:
+    Pool.bulletComponent.enqueue(previousComponent)
+
+  return this
+
+##
+## @returns {bosco.Entity}
+##
+proc removeBullet*(this : Entity) : Entity =
+  var component = this.bullet
+  discard this.removeComponent(int(Component.Bullet))
+  Pool.bulletComponent.enqueue(component)
   return this
 
 
@@ -229,22 +256,49 @@ proc removeDestroy*(this : Entity) : Entity =
   Pool.destroyComponent.enqueue(component)
   return this
 
+
+proc clearEnemyComponent*(this : Entity) =
+  Pool.enemyComponent = initQueue[EnemyComponent]()
+
+## @type {shmupwarz.EnemyComponent} 
+proc enemy*(this : Entity) : EnemyComponent =
+  (EnemyComponent)this.getComponent(int(Component.Enemy))
+
 ## @type {boolean} 
-proc isEnemy*(this : Entity) : bool =
+proc hasEnemy*(this : Entity) : bool =
   this.hasComponent(int(Component.Enemy))
-proc `isEnemy=`*(this : Entity, value : bool) =
-  if value != this.isEnemy:
-    if value:
-      discard this.addComponent(int(Component.Enemy), Pool.enemyComponent)
-    else:
-      discard this.removeComponent(int(Component.Enemy))
 
 ##
-## @param {boolean} value
+## @param {bool} active
 ## @returns {bosco.Entity}
 ##
-proc setEnemy*(this : Entity, value : bool) : Entity =
-  this.isEnemy = value
+proc addEnemy*(this : Entity, active:bool) : Entity =
+  var component = if Pool.enemyComponent.len > 0 : Pool.enemyComponent.dequeue() else: EnemyComponent()
+  component.active = active
+  discard this.addComponent(int(Component.Enemy), component)
+  return this
+
+##
+## @param {bool} active
+## @returns {bosco.Entity}
+##
+proc replaceEnemy*(this : Entity, active:bool) : Entity =
+  var previousComponent = if this.hasEnemy : this.enemy else: nil
+  var component = if Pool.enemyComponent.len > 0 : Pool.enemyComponent.dequeue() else: EnemyComponent()
+  component.active = active
+  discard this.replaceComponent(int(Component.Enemy), component)
+  if previousComponent != nil:
+    Pool.enemyComponent.enqueue(previousComponent)
+
+  return this
+
+##
+## @returns {bosco.Entity}
+##
+proc removeEnemy*(this : Entity) : Entity =
+  var component = this.enemy
+  discard this.removeComponent(int(Component.Enemy))
+  Pool.enemyComponent.enqueue(component)
   return this
 
 

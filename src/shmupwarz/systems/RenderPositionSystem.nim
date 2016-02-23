@@ -1,6 +1,13 @@
 ##
 ## RenderPositionSystem
 ##
+type RenderPositionSystem* = ref object of System
+  game* : Game
+  group* : Group
+
+##
+## Create new RenderPositionSystem
+##
 proc newRenderPositionSystem*(game : Game) : RenderPositionSystem =
   new(result)
   result.game = game

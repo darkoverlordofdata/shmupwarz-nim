@@ -1,6 +1,13 @@
 ##
 ## ScaleAnimationSystem
 ##
+type ScaleAnimationSystem* = ref object of System
+  game* : Game
+  group* : Group
+
+##
+## Create new ScaleAnimationSystem
+##
 proc newScaleAnimationSystem*(game : Game) : ScaleAnimationSystem =
   new(result)
   result.game = game

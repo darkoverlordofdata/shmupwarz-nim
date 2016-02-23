@@ -1,6 +1,13 @@
 ##
 ## MovementSystem
 ##
+type MovementSystem* = ref object of System
+  game* : Game
+  group* : Group
+
+##
+## Create new MovementSystem
+##
 proc newMovementSystem*(game : Game) : MovementSystem =
   new(result)
   result.game = game

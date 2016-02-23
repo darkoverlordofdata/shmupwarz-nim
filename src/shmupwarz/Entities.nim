@@ -1,6 +1,3 @@
-import math
-
-const Tau : float64 = 2 * math.PI
 
 type
   Layer* {.pure.} = enum
@@ -22,7 +19,7 @@ type
     ASPLODE
     SMALLASPLODE
 
-  Enemy* {.pure.} = enum
+  EnemyShip* {.pure.} = enum
     Enemy1
     Enemy2
     Enemy3
@@ -52,7 +49,7 @@ proc createPlayer*(this : Game) : Entity =
 
 proc createBullet(this : Game, x : float64, y : float64) : Entity =
   return this.world.createEntity("bullet")
-  .setBullet(true)
+  .addBullet(true)
   .addPosition(x, y)
   .addVelocity(0, -800)
   .addBounds(5)
@@ -89,7 +86,7 @@ proc createEnemy1(this : Game) : Entity =
   let x = float64(math.random(this.width))
   let y = float64(this.height/2 - 200)
   return this.world.createEntity("enemy1")
-  .setEnemy(true)
+  .addEnemy(true)
   .addBounds(20)
   .addHealth(10, 10)
   .addVelocity(0, 40)
@@ -101,7 +98,7 @@ proc createEnemy2(this : Game) : Entity =
   let x = float64(math.random(this.width))
   let y = float64(this.height/2 - 100)
   return this.world.createEntity("enemy2")
-  .setEnemy(true)
+  .addEnemy(true)
   .addBounds(40)
   .addHealth(20, 20)
   .addVelocity(0, 30)
@@ -113,7 +110,7 @@ proc createEnemy3(this : Game) : Entity =
   let x = float64(math.random(this.width))
   let y = float64(this.height/2 - 50)
   return this.world.createEntity("enemy3")
-  .setEnemy(true)
+  .addEnemy(true)
   .addBounds(70)
   .addHealth(60, 60)
   .addVelocity(0, 20)

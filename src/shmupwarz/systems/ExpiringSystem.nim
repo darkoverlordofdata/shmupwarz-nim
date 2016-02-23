@@ -1,6 +1,13 @@
 ##
 ## ExpiringSystem
 ##
+type ExpiringSystem* = ref object of System
+  game* : Game
+  group* : Group
+
+##
+## Create new ExpiringSystem
+##
 proc newExpiringSystem*(game : Game) : ExpiringSystem =
   new(result)
   result.game = game

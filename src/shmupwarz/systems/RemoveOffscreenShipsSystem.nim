@@ -1,6 +1,13 @@
 ##
 ## RemoveOffscreenShipsSystem
 ##
+type RemoveOffscreenShipsSystem* = ref object of System
+  game* : Game
+  group* : Group
+
+##
+## Create new RemoveOffscreenShipsSystem
+##
 proc newRemoveOffscreenShipsSystem*(game : Game) : RemoveOffscreenShipsSystem =
   new(result)
   result.game = game

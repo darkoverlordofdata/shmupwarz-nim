@@ -23,7 +23,5 @@ method initialize*(this : MovementSystem) =
 ##
 method execute*(this : MovementSystem) =
   for entity in this.group.getEntities():
-    let pos = entity.position
-    let vel = entity.velocity
-    pos.x += (vel.x * this.game.delta)
-    pos.y += (vel.y * this.game.delta)
+    entity.position.x += (entity.velocity.x * this.game.delta)
+    entity.position.y += (entity.velocity.y * this.game.delta)

@@ -10,8 +10,10 @@ proc setPlayer(this : PlayerInputSystem, player : Entity) =
 
 method execute*(this : PlayerInputSystem) =
   const FireRate = 0.1
-  
+
   if this.player == nil: return
+  if not this.player.hasPosition:return
+
   var pos = this.player.position
   if this.game.currentKeyStates[(int)SDL_SCANCODE_UP] == 1:
     pos.y -= 1
@@ -34,7 +36,9 @@ method execute*(this : PlayerInputSystem) =
       this.timeToFire = 0
 
 proc moveTo(this : PlayerInputSystem, x: int, y: int) =
+
   if this.player == nil: return
+  if not this.player.hasPosition: return
   var pos = this.player.position
   pos.x = float64(x)
   pos.y = float64(y)

@@ -56,6 +56,7 @@ proc init_sdl(this : AbstractGame) =
   if this.renderer == nil:
       echo "Error creating SDL_Renderer: ", getError()
       quit 1
+  this.renderer.setDrawColor(0xff, 0xff, 0xff, 0xff)
 
   this.font = ttf.openFont(FONT_PATH, FONT_SIZE)
   if this.font == nil:

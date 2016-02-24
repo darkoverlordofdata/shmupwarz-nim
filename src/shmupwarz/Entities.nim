@@ -31,7 +31,7 @@ proc createBackground*(this : Game) : Entity =
   .addPosition(0, 0)
   .addLayer(int(Layer.BACKGROUND))
   .addScale(2, 1)
-  .addResource("res/images/BackdropBlackLittleSparkBlack.png", nil, true)
+  .addResource("res/images/BackdropBlackLittleSparkBlack.png", nil, false)
 
 
 ##
@@ -45,17 +45,17 @@ proc createPlayer*(this : Game) : Entity =
   .addVelocity(0, 0)
   .addLayer(int(Layer.PLAYER))
   .addPosition(float64(this.width/2), float64(this.height-80))
-  .addResource("res/images/fighter.png", nil, false)
+  .addResource("res/images/fighter.png", nil, true)
 
 proc createBullet(this : Game, x : float64, y : float64) : Entity =
   return this.world.createEntity("bullet")
-  .addBullet(true)
+  .setBullet(true)
   .addPosition(x, y)
   .addVelocity(0, -800)
   .addBounds(5)
   .addExpires(1)
   .addLayer(int(Layer.BULLET))
-  .addResource("res/images/bullet.png", nil, false)
+  .addResource("res/images/bullet.png", nil, true)
   .addSoundEffect(int(Effect.PEW))
 
 proc createParticle(this : Game, x : float64, y : float64) : Entity =
@@ -70,7 +70,7 @@ proc createParticle(this : Game, x : float64, y : float64) : Entity =
   .addExpires(1)
   .addLayer(int(Layer.PARTICLE))
   .addScale(scale, scale)
-  .addResource("res/images/particle.png", nil, false)
+  .addResource("res/images/particle.png", nil, true)
 
 proc createExplosion(this : Game, x : float64, y : float64, scale : float64) : Entity =
   return this.world.createEntity("explosion")
@@ -80,40 +80,40 @@ proc createExplosion(this : Game, x : float64, y : float64, scale : float64) : E
   .addScale(scale, scale)
   .addSoundEffect(if scale < 0.5 : int(Effect.SMALLASPLODE) else : int(Effect.ASPLODE))
   .addScaleAnimation(scale / 100, scale, -3, false, true)
-  .addResource("res/images/explosion.png", nil, false)
+  .addResource("res/images/explosion.png", nil, true)
 
 proc createEnemy1(this : Game) : Entity =
   let x = float64(math.random(this.width))
   let y = float64(this.height/2 - 200)
   return this.world.createEntity("enemy1")
-  .addEnemy(true)
+  .setEnemy(true)
   .addBounds(20)
   .addHealth(10, 10)
   .addVelocity(0, 40)
   .addLayer(int(Layer.ACTORS_1))
   .addPosition(x, y)
-  .addResource("res/images/enemy1.png", nil, false)
+  .addResource("res/images/enemy1.png", nil, true)
 
 proc createEnemy2(this : Game) : Entity =
   let x = float64(math.random(this.width))
   let y = float64(this.height/2 - 100)
   return this.world.createEntity("enemy2")
-  .addEnemy(true)
+  .setEnemy(true)
   .addBounds(40)
   .addHealth(20, 20)
   .addVelocity(0, 30)
   .addLayer(int(Layer.ACTORS_2))
   .addPosition(x, y)
-  .addResource("res/images/enemy2.png", nil, false)
+  .addResource("res/images/enemy2.png", nil, true)
 
 proc createEnemy3(this : Game) : Entity =
   let x = float64(math.random(this.width))
   let y = float64(this.height/2 - 50)
   return this.world.createEntity("enemy3")
-  .addEnemy(true)
+  .setEnemy(true)
   .addBounds(70)
   .addHealth(60, 60)
   .addVelocity(0, 20)
   .addLayer(int(Layer.ACTORS_3))
   .addPosition(x, y)
-  .addResource("res/images/enemy3.png", nil, false)
+  .addResource("res/images/enemy3.png", nil, true)

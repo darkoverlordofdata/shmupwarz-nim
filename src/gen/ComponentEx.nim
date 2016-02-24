@@ -38,7 +38,7 @@ type
     radius* : float64
 
   BulletComponent* = ref object of IComponent
-    active* : bool
+    bullet* : bool
 
   ColorAnimationComponent* = ref object of IComponent
     redMin* : float64
@@ -60,10 +60,10 @@ type
     repeat* : bool
 
   DestroyComponent* = ref object of IComponent
-    active* : bool
+    destroy* : bool
 
   EnemyComponent* = ref object of IComponent
-    active* : bool
+    enemy* : bool
 
   ExpiresComponent* = ref object of IComponent
     delay* : float64
@@ -98,7 +98,7 @@ type
   ResourceComponent* = ref object of IComponent
     path* : string
     sprite* : Sprite
-    bgd* : bool
+    centered* : bool
 
   ScaleAnimationComponent* = ref object of IComponent
     min* : float64
@@ -127,10 +127,10 @@ type
   ##
   PoolObj = ref object of RootObj
     boundsComponent* : Queue[BoundsComponent]
-    bulletComponent* : Queue[BulletComponent]
+    bulletComponent* : BulletComponent
     colorAnimationComponent* : Queue[ColorAnimationComponent]
-    destroyComponent* : Queue[DestroyComponent]
-    enemyComponent* : Queue[EnemyComponent]
+    destroyComponent* : DestroyComponent
+    enemyComponent* : EnemyComponent
     expiresComponent* : Queue[ExpiresComponent]
     firingComponent* : FiringComponent
     healthComponent* : Queue[HealthComponent]
@@ -157,21 +157,15 @@ proc newPoolObj() : PoolObj =
   for i in 1..POOL_SIZE:
     result.boundsComponent.add(BoundsComponent())
 
-  result.bulletComponent = initQueue[BulletComponent]()
-  for i in 1..POOL_SIZE:
-    result.bulletComponent.add(BulletComponent())
+  result.bulletComponent = BulletComponent()
 
   result.colorAnimationComponent = initQueue[ColorAnimationComponent]()
   for i in 1..POOL_SIZE:
     result.colorAnimationComponent.add(ColorAnimationComponent())
 
-  result.destroyComponent = initQueue[DestroyComponent]()
-  for i in 1..POOL_SIZE:
-    result.destroyComponent.add(DestroyComponent())
+  result.destroyComponent = DestroyComponent()
 
-  result.enemyComponent = initQueue[EnemyComponent]()
-  for i in 1..POOL_SIZE:
-    result.enemyComponent.add(EnemyComponent())
+  result.enemyComponent = EnemyComponent()
 
   result.expiresComponent = initQueue[ExpiresComponent]()
   for i in 1..POOL_SIZE:
@@ -227,5 +221,5 @@ proc newPoolObj() : PoolObj =
   for i in 1..POOL_SIZE:
     result.velocityComponent.add(VelocityComponent())
 
-var Pool* = PoolObj()
+var Pool* = newPoolObj()
 

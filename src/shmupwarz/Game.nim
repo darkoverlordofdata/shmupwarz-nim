@@ -18,7 +18,8 @@ const Tau : float64 = 2 * math.PI
 type
   Game* = ref object of AbstractGame
     world* : World
-    player* : PlayerInputSystem
+    input* : PlayerInputSystem
+    player*: Entity
 
   PlayerInputSystem* = ref object of System
     game* : Game
@@ -64,8 +65,8 @@ method initialize*(this : Game) =
   this.world = newWorld(cp)
 
   this.world.add(newMovementSystem(this))
-  this.player = newPlayerInputSystem(this)
-  this.world.add(this.player)
+  this.input = newPlayerInputSystem(this)
+  this.world.add(this.input)
   this.world.add(newCollisionSystem(this))
   this.world.add(newExpiringSystem(this))
   this.world.add(newEntitySpawningTimerSystem(this))
@@ -77,7 +78,8 @@ method initialize*(this : Game) =
   this.world.add(newDestroySystem(this))
   this.world.initialize()
   discard this.createBackground()
-  this.player.setPlayer this.createPlayer()
+  this.player = this.createPlayer()
+  this.input.setPlayer this.player
 
 
 method event*(this : Game, evt : Event)  =
@@ -88,7 +90,7 @@ method event*(this : Game, evt : Event)  =
     var x:cint
     var y:cint
     getMouseState(addr(x), addr(y))
-    this.player.onMouseEvent(evt.kind, x, y)
+    this.input.onMouseEvent(evt.kind, x, y)
 ##
 ##  Callback to update the game
 ##

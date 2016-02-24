@@ -32,11 +32,11 @@ proc SpriteFromFile*(renderer : RendererPtr, path : string) : Sprite =
     if result.texture == nil:
       echo "Error creating texture from: ", path
     else:
+      result.texture.setTextureBlendMode BlendMode_Blend
       SpriteUniqueId += 1
       result.id = SpriteUniqueId
       result.path = path
       result.centered = true
-      result.texture.setTextureBlendMode BlendMode_Blend
       result.height = loadedSurface.h
       result.width = loadedSurface.w
       result.scale.x = 1
@@ -79,6 +79,5 @@ proc render*(this : Sprite, renderer : RendererPtr) =
   let h = float64(this.height) * this.scale.y
   let x1 = if this.centered: this.x-(int(w/2)) else: this.x
   let y1 = if this.centered: this.y-(int(h/2)) else: this.y
-  var src = rect(0, 0, cint(w), cint(h))
   var dst = rect(cint(x1), cint(y1), cint(w), cint(h))
-  renderer.copy this.texture, addr(src), addr(dst)
+  renderer.copy this.texture, nil, addr(dst)

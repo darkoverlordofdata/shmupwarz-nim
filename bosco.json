@@ -11,9 +11,7 @@
     "Bounds": [
       "radius:float64"
     ],
-    "Bullet": [
-      "active:bool"
-    ],
+    "Bullet": false,
     "ColorAnimation": [
       "redMin:float64",
       "redMax:float64",
@@ -33,12 +31,8 @@
       "alphaAnimate:bool",
       "repeat:bool"
     ],
-    "Destroy": [
-      "active:bool"
-    ],
-    "Enemy": [
-      "active:bool"
-    ],
+    "Destroy": false,
+    "Enemy": false,
     "Expires": [
       "delay:float64"
     ],
@@ -58,7 +52,7 @@
       "x:float64",
       "y:float64"
     ],
-    "Player": false,
+    "Player":  false,
     "Position": [
       "x:float64",
       "y:float64"
@@ -66,7 +60,7 @@
     "Resource": [
       "path:string",
       "sprite:Sprite",
-      "bgd:bool"
+      "centered:bool"
     ],
     "ScaleAnimation": [
       "min:float64",

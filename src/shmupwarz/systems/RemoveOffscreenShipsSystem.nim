@@ -20,4 +20,4 @@ method execute*(this : RemoveOffscreenShipsSystem) =
   for entity in this.group.getEntities():
     if entity.position.y > float64(this.game.height) - entity.bounds.radius:
       if not entity.isPlayer:
-        discard entity.addDestroy(true)
+        discard entity.setDestroy(true)

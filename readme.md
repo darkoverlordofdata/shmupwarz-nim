@@ -2,6 +2,7 @@
 
 One more time, with Nim!
 
+entitas generate --platform nim
 
 # MIT License
 

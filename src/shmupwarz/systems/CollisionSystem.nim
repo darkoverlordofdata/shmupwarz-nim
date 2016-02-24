@@ -38,12 +38,12 @@ method execute*(this : CollisionSystem) =
         let health = enemy.health
         let position = enemy.position
 
-        discard this.game.createExplosion(bp.x, bp.y, 0.1)
+        discard this.game.createExplosion(bp.x, bp.y, 0.25)
         for i in countdown(5, 1):
           discard this.game.createParticle(bp.x, bp.y)
-        discard bullet.addDestroy(true)
+        discard bullet.setDestroy(true)
         health.health -= 1
         if health.health < 0:
-          discard enemy.addDestroy(true)
-          discard this.game.createExplosion(position.x, position.y, 0.2)
+          discard enemy.setDestroy(true)
+          discard this.game.createExplosion(position.x, position.y, 0.5)
         break

@@ -34,8 +34,7 @@ method initialize*(this : ViewManagerSystem) =
       ordinal = entity.layer.ordinal
       res.sprite.layer = ordinal
 
-    if res.bgd:
-      res.sprite.centered = false
+    res.sprite.centered = res.centered
 
     ##
     ##  Sort the sprite into the display by layer

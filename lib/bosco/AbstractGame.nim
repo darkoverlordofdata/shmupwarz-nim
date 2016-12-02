@@ -2,43 +2,7 @@ import sdl2
 import sdl2/image
 import sdl2/ttf
 import strfmt
-import Sprite
 
-
-type
-  AbstractGame* = ref object of RootObj
-    name* : string
-    width* : cint
-    height* : cint
-    running* : bool
-    window* : WindowPtr
-    renderer* : RendererPtr
-    font* : FontPtr
-    sprites* : seq[Sprite]
-    currentKeyStates* : ptr array[0..512, uint8]
-    delta* : float64
-    ticks* : uint32
-    lastTick : uint32
-    showFps : bool
-    fpsTimes : array[0..14, int]
-    fpsTimeLast : int
-    fpsCount : int
-    fpsTickLast : int
-    fpsSprite : Sprite
-    fpsBg : Color
-    fpsFg : Color
-    fpsSrcRect : Rect
-    fpsDstRect : Rect
-    lastCount : int
-
-proc init_sdl(this : AbstractGame)
-proc render*(this : AbstractGame)
-proc get_fps(this : AbstractGame) : Sprite
-method start*(this : AbstractGame) {.base.}
-method event*(this : AbstractGame, evt : Event) {.base.}
-method update*(this : AbstractGame, delta : float64) {.base.}
-method cleanup*(this : AbstractGame) {.base.}
-method initialize*(this : AbstractGame) {.base.}
 
 const FONT_PATH = "res/fonts/skranji.regular.ttf"
 const FONT_SIZE = 16

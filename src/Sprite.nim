@@ -2,23 +2,6 @@ import sdl2
 import sdl2/image
 import sdl2/ttf
 
-type
-  Vector2* = object of RootObj
-    x* : float64
-    y* : float64
-
-  Sprite* = ref object of RootObj
-    texture* : TexturePtr
-    x* : int
-    y* : int
-    width* : int
-    height* : int
-    scale* : Vector2
-    centered* : bool
-    layer* : int
-    id* : int
-    path* : string
-
 var
   SpriteUniqueId : int = 0
 

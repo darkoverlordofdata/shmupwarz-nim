@@ -4,7 +4,13 @@ One more time, with Nim!
 
 git clone git@github.com/darkoverlordofdata/shmupwarz-nim
 cd shmupwarz-nim
-nimble insrall
+cd lib
+cd entitas
+nimble install
+cd ..
+cd bosco
+nimble install
+cd ../..
 entitas generate --platform nim
 nim --define:release --out:build/example compile example/main
 cd build

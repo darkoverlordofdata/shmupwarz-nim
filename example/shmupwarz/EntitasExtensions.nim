@@ -5,7 +5,7 @@
 ##
 import queues
 import entitas
-import Sprite
+import bosco
 const POOL_SIZE : int = 128
 
 ##

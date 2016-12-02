@@ -1,12 +1,4 @@
-# import math
-# import random
-# import entitas
-# import EntitasExtensions
-# import Sprite
-# import Game
-
 const Tau : float64 = 2 * math.PI
-
 
 type
   ZOrder* {.pure.} = enum

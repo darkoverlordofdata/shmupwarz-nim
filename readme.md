@@ -2,7 +2,17 @@
 
 One more time, with Nim!
 
+git clone git@github.com/darkoverlordofdata/shmupwarz-nim
+cd shmupwarz-nim
+nimble insrall
 entitas generate --platform nim
+nim --define:release --out:build/example compile example/main
+cd build
+./example
+
+
+
+
 
 # MIT License
 

@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+/**
+ * tools/server
+ * 
+ * Used by F5 ./.vscode/launch.json
+ * 
+ * author: darkoverlordofdata@gmail.com
+ */
+(function() {
+const execFile = require('child_process').execFile
+const child = execFile('./example', [], (error, stdout, stderr) => {
+  if (error) {
+    throw error
+  }
+  console.log(stdout)
+});	
+})();

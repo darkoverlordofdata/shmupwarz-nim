@@ -13,5 +13,6 @@ const child = execFile('./example', [], (error, stdout, stderr) => {
     throw error
   }
   console.log(stdout)
-});	
-})();
+  process.exit()
+})
+})()

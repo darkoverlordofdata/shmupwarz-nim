@@ -597,11 +597,14 @@ method event*(this : Game, evt : Event)  =
 ##  Callback to update the game
 ##
 method update*(this : Game, delta : float64) =
-  try:
-    this.world.execute()
-  except:
+  # GC_disable()
+  # try:
+  this.world.execute()
+  # except:
     #let e = getCurrentException()
-    echo "Error!"
+    # echo "Error!"
+  # finally:
+  #   GC_step(5)
 ##
 ##  Callback to teardown the game
 ##

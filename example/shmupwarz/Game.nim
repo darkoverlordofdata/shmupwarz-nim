@@ -357,8 +357,8 @@ method initialize*(this : ViewManagerSystem) =
     ##  Load the resource, and add it to the rendering system
     ##
     var ordinal : int
-    var entity = EntityArgs(e).entity
-    var res = ResourceComponent(EntityArgs(e).component)
+    let entity = EntityArgs(e).entity
+    let res = ResourceComponent(EntityArgs(e).component)
     res.sprite = SpriteFromFile(this.game.renderer, res.path)
 
     if entity.hasScale:
@@ -426,7 +426,7 @@ proc newHudRenderSystem*(game : Game) : HudRenderSystem =
 proc createText(this : HudRenderSystem, x : int, y : int, text : string) : Sprite =
   this.fg = color(255, 255, 255, 255)
   this.bg = color(0, 0, 0, 0)
-  var sprite = SpriteFromText(this.game.renderer, text, this.font, this.fg, this.bg)
+  let sprite = SpriteFromText(this.game.renderer, text, this.font, this.fg, this.bg)
   sprite.x = x
   sprite.y = y
   sprite.layer = int(Zorder.HUD)
@@ -465,10 +465,10 @@ method initialize*(this : DestroySystem) =
   this.group = this.world.getGroup(Match.Destroy)
   this.world.getGroup(Match.Destroy).onAddEntity
   .addHandler(proc(e : EventArgs) =
-    var entity = EntityArgs(e).entity
+    let entity = EntityArgs(e).entity
     let sprite = entity.resource.sprite
     for i in 0..this.game.sprites.len-1:
-      var s = this.game.sprites[i]
+      let s = this.game.sprites[i]
       if s.id == sprite.id:
         this.game.sprites.delete(i)
         entity.resource.sprite.texture.destroy()
@@ -510,7 +510,7 @@ method execute*(this : PlayerInputSystem) =
   if this.player == nil: return
   if not this.player.hasPosition:return
 
-  var pos = this.player.position
+  let pos = this.player.position
   if this.mouseDefined:
     if this.mouseDown or this.game.currentKeyStates[(int)SDL_SCANCODE_Z] == 1:
       if this.timeToFire <= 0:
@@ -527,7 +527,7 @@ proc moveTo(this : PlayerInputSystem, x: int, y: int) =
 
   if this.player == nil: return
   if not this.player.hasPosition: return
-  var pos = this.player.position
+  let pos = this.player.position
   pos.x = float64(x)
   pos.y = float64(y)
 

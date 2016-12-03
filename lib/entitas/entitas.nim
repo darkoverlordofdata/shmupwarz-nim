@@ -200,7 +200,7 @@ proc addComponent*(this: Entity, index : int, component : IComponent) : Entity =
   return this
 
 proc ReplaceComponent(this: Entity, index : int, replacement : IComponent) : void =
-  var previousComponent = this.components[index]
+  let previousComponent = this.components[index]
   if previousComponent != replacement:
     this.components[index] = replacement
     this.componentsCache = nil
@@ -363,9 +363,9 @@ proc noneOf*(this: Matcher, args : seq[int]) : Matcher =
 
 proc matches*(this: Matcher, entity : Entity) : bool =
   ## Check if the entity matches this matcher
-  var matchesAllOf = if this.allOfIndices.len == 0 : true else : entity.hasComponents(this.allOfIndices)
-  var matchesAnyOf = if this.anyOfIndices.len == 0 : true else : entity.hasAnyComponent(this.anyOfIndices)
-  var matchesNoneOf = if this.noneOfIndices.len == 0 : true else : not entity.hasAnyComponent(this.noneOfIndices)
+  let matchesAllOf = if this.allOfIndices.len == 0 : true else : entity.hasComponents(this.allOfIndices)
+  let matchesAnyOf = if this.anyOfIndices.len == 0 : true else : entity.hasAnyComponent(this.anyOfIndices)
+  let matchesNoneOf = if this.noneOfIndices.len == 0 : true else : not entity.hasAnyComponent(this.noneOfIndices)
   return matchesAllOf and matchesAnyOf and matchesNoneOf
 
 proc MergeIndices(args: seq[Matcher]) : seq[int] =
@@ -458,7 +458,7 @@ proc getEntities*(this : Group) : seq[Entity] =
 
 proc getSingleEntity*(this : Group) : Entity =
   if this.singleEntityCache == nil:
-    var c = this.entities.len
+    let c = this.entities.len
     if c == 1:
       for e in this.entities.values:
         this.singleEntityCache = e
@@ -524,7 +524,7 @@ proc onEntityReleased*(this: World, entity : Entity) : void  =
 
 proc onEntityChanged*(this: World, entity : Entity, index : int, component : IComponent) : void =
   if this.groupsForIndex.hasKey(index):
-    var groups = this.groupsForIndex[index]
+    let groups = this.groupsForIndex[index]
     if groups != nil:
       for group in groups:
         group.handleEntity(entity, index, component)
@@ -544,12 +544,19 @@ proc destroyEntity*(this: World, entity : Entity): void =
 
 proc createEntity*(this: World, name : string): Entity =
   #var entity = if this.reusableEntities.len > 0 : this.reusableEntities.dequeue() else : newEntity(this.totalComponents)
-  var entity : Entity
-  if this.reusableEntities.len > 0 :
-    entity = this.reusableEntities.dequeue()
-    #entity = newEntity(this.totalComponents)
-  else :
-    entity = newEntity(this.totalComponents)
+  # var entity : Entity
+  # if this.reusableEntities.len > 0 :
+  #   entity = this.reusableEntities.dequeue()
+  #   #entity = newEntity(this.totalComponents)
+  # else :
+  #   entity = newEntity(this.totalComponents)
+
+  let entity =
+    if this.reusableEntities.len > 0 :
+      this.reusableEntities.dequeue()
+      #entity = newEntity(this.totalComponents)
+    else :
+      newEntity(this.totalComponents)
 
   this.creationIndex+=1
   entity.initialize(this, name, generateUUID(), this.creationIndex)
@@ -590,7 +597,7 @@ proc getGroup*(this: World, matcher : Matcher) : Group  =
   return group
 
 proc destroyAllEntities*(this: World): void =
-  var entities = this.getEntities(nil)
+  let entities = this.getEntities(nil)
   for entity in entities:
     this.destroyEntity(entity)
 

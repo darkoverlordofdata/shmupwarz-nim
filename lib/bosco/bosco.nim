@@ -1,7 +1,6 @@
 import sdl2
 import sdl2/image
 import sdl2/ttf
-import sdl2/gfx
 import strfmt
 import os
 
@@ -51,7 +50,6 @@ type
     fpsSrcRect : Rect
     fpsDstRect : Rect
     lastCount : int
-    fpsman : FpsManager
 
 
 proc SpriteFromFile*(renderer : RendererPtr, path : string): Sprite
@@ -105,8 +103,6 @@ proc init_sdl(this : AbstractGame) =
   let su = this.font.renderText("fps: 99.99", this.fpsFg, this.fpsBg)
   this.fpsSrcRect = rect(0, 0, (cint)su.w, (cint)su.h)
   this.fpsDstRect = rect(0, 0, (cint)su.w, (cint)su.h)
-  this.fpsman.init
-  #this.fpsman.setFramerate(60)
 
 
 method start*(this : AbstractGame) =
@@ -123,7 +119,6 @@ method start*(this : AbstractGame) =
         else: this.event(evt)
     if (bool)this.currentKeyStates[41] : this.running = false
     this.ticks = getTicks()
-    #this.delta = this.fpsman.getFrameRate() / 1000
     this.delta = float64(this.ticks - this.lastTick)/1000.0
     this.lastTick = this.ticks  
     GC_disable()
@@ -133,11 +128,6 @@ method start*(this : AbstractGame) =
     var remaining = int(16-delta)
     if remaining<0: remaining = 0
     GC_step(us = remaining)
-    # delta = int(getTicks() - this.ticks)
-    # remaining = int(16-delta)-1
-    # if remaining<0: remaining = 0
-    # sleep(remaining)
-    #this.fpsman.delay()
 
   destroy this.renderer
   destroy this.window

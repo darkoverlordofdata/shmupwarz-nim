@@ -249,8 +249,8 @@ method execute*(this : CollisionSystem) =
         let position = enemy.position
 
         discard this.game.createExplosion(bp.x, bp.y, 0.25)
-        for i in countdown(5, 1):
-          discard this.game.createParticle(bp.x, bp.y)
+        # for i in countdown(5, 1):
+        #   discard this.game.createParticle(bp.x, bp.y)
         discard bullet.setDestroy(true)
         health.health -= 1
         if health.health < 0:
@@ -471,6 +471,7 @@ method initialize*(this : DestroySystem) =
       var s = this.game.sprites[i]
       if s.id == sprite.id:
         this.game.sprites.delete(i)
+        entity.resource.sprite.texture.destroy()
         entity.resource.sprite = nil
         break
     this.world.destroyEntity(entity)
@@ -597,14 +598,8 @@ method event*(this : Game, evt : Event)  =
 ##  Callback to update the game
 ##
 method update*(this : Game, delta : float64) =
-  # GC_disable()
-  # try:
   this.world.execute()
-  # except:
-    #let e = getCurrentException()
-    # echo "Error!"
-  # finally:
-  #   GC_step(5)
+
 ##
 ##  Callback to teardown the game
 ##

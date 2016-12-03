@@ -111,6 +111,7 @@ method start*(this : AbstractGame) =
   this.initialize()
   this.currentKeyStates = getKeyboardState(nil)
   var evt = defaultEvent
+  GC_disable()
   while this.running:
     while pollEvent(evt):
       case evt.kind
@@ -121,12 +122,11 @@ method start*(this : AbstractGame) =
     this.ticks = getTicks()
     this.delta = float64(this.ticks - this.lastTick)/1000.0
     this.lastTick = this.ticks  
-    GC_disable()
     this.update(this.delta)
     this.render()
     var delta = int(getTicks() - this.ticks)
     var remaining = int(16-delta)
-    if remaining<0: remaining = 0
+    if remaining<0: remaining = 1
     GC_step(us = remaining)
 
   destroy this.renderer

@@ -7,6 +7,7 @@ import times
 
 const FONT_PATH = "res/fonts/skranji.regular.ttf"
 const FONT_SIZE = 16
+const FPS = 1/60
 var
   SpriteUniqueId : int = 0
 
@@ -35,17 +36,19 @@ type
     window* : WindowPtr
     renderer* : RendererPtr
     font* : FontPtr
-    sprites* : seq[Sprite]
+    # sprites* : seq[Sprite]
+    sprites* : array[0..100, Sprite]
+    eos* : int
     currentKeyStates* : ptr array[0..512, uint8]
     delta* : float64
-    ticks* : uint32
-    lastTick : uint32
+    #ticks* : uint32
+    #lastTick : uint32
     showFps : bool
-    fpsTimes : array[0..14, int]
-    fpsTimeLast : int
-    fpsCount : int
-    fpsTickLast : int
-    fpsSprite : Sprite
+    # fpsTimes : array[0..14, int]
+    # fpsTimeLast : int
+    # fpsCount : int
+    # fpsTickLast : int
+    # fpsSprite : Sprite
     fpsBg : Color
     fpsFg : Color
     fpsSrcRect : Rect
@@ -56,11 +59,8 @@ type
 proc SpriteFromFile*(renderer : RendererPtr, path : string): Sprite
 proc SpriteFromText*(renderer : RendererPtr, text : string, font : FontPtr, fg : Color, bg : Color) : Sprite
 proc setText*(this : Sprite, renderer : RendererPtr, text : string, font : FontPtr, fg : Color, bg : Color) : Sprite
-#proc render*(this : Sprite, renderer : RendererPtr)
 
 proc init_sdl(this : AbstractGame)
-#proc render*(this : AbstractGame)
-#proc get_fps(this : AbstractGame) : Sprite
 method start*(this : AbstractGame) {.base.}
 method event*(this : AbstractGame, evt : Event) {.base.}
 method update*(this : AbstractGame, delta : float64) {.base.}
@@ -92,7 +92,7 @@ proc init_sdl(this : AbstractGame) =
 
   ## setup for FPS display
   this.showFps = true
-  this.fpsTimes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+  # this.fpsTimes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
   this.fpsFg.r = 255
   this.fpsFg.g = 255
   this.fpsFg.b = 255
@@ -108,19 +108,28 @@ proc init_sdl(this : AbstractGame) =
 
 method start*(this : AbstractGame) =
   var delta = 0
-  var remaining = 0
   var dst:Rect
   var w = 0.0
   var h = 0.0
   var x = 0
   var y = 0
+  var i = 0
+  var l = 0
   var sprite:Sprite
   var fpsSprite:Sprite
   var fpsString = ""
   var elapsed = 0.0
   var lastTime = 0.0
+  var currentTime = 0.0
   var currentFps = 0.0
   var frames = 0
+
+  var remaining0:float
+  var remaining1:float
+  var current1:float
+  var delta1:float
+  var current2:float
+  var delta2:float
 
 
   ## Start the game
@@ -129,6 +138,7 @@ method start*(this : AbstractGame) =
   this.currentKeyStates = getKeyboardState(nil)
   var evt = defaultEvent
   GC_disable()
+  currentTime = epochTime()
   while this.running:
     while pollEvent(evt):
       case evt.kind
@@ -136,86 +146,73 @@ method start*(this : AbstractGame) =
           this.running = false
         else: this.event(evt)
     if (bool) this.currentKeyStates[41] : this.running = false
-    this.ticks = getTicks()
-    this.delta = float64(this.ticks - this.lastTick)/1000.0
-    this.lastTick = this.ticks  
+
+
+    lastTime = currentTime
+    currentTime = epochTime()
+    this.delta = currentTime - lastTime
+    remaining0 = FPS - this.delta
     this.update(this.delta)
+
+    current1 = epochTime()
+    delta1 = current1 - currentTime
+
     this.renderer.setDrawColor(0, 0, 0, 255)
     this.renderer.clear()
-    for sprite in this.sprites:
-      w = float64(sprite.width) * sprite.scale.x
-      h = float64(sprite.height) * sprite.scale.y
-      x = if sprite.centered: sprite.x-(int(w/2)) else: sprite.x
-      y = if sprite.centered: sprite.y-(int(h/2)) else: sprite.y
-      dst = rect(cint(x), cint(y), cint(w), cint(h))
-      this.renderer.copy sprite.texture, nil, addr(dst)
 
-    if this.showFps: 
-      frames += 1
-      elapsed = epochTime() - lastTime
-      if elapsed > 1.0:
-        currentFps = float32(frames) / elapsed
-        lastTime = epochTime()
-        frames = 0
-        fpsString = currentFps.format("02.2f")
-        fpsSprite = SpriteFromText(this.renderer, fpsString, this.font, this.fpsFg, this.fpsBg)
-        fpsSprite.centered = false
-      elif fpsSprite == nil:
-        fpsSprite = SpriteFromText(this.renderer, "60.00", this.font, this.fpsFg, this.fpsBg)
-        fpsSprite.centered = false
-      sprite = fpsSprite
+    i = 0
+    l = this.eos #sprites.len
+    
+    while i < l:
+      sprite = this.sprites[i]
+      i += 1
+    # for sprite in this.sprites:
       w = float64(sprite.width) * sprite.scale.x
       h = float64(sprite.height) * sprite.scale.y
       x = if sprite.centered: sprite.x-(int(w/2)) else: sprite.x
       y = if sprite.centered: sprite.y-(int(h/2)) else: sprite.y
       dst = rect(cint(x), cint(y), cint(w), cint(h))
-      this.renderer.copy sprite.texture, nil, addr(dst)
-      
+      this.renderer.copyEx sprite.texture, nil, addr(dst), 0, nil, SDL_FLIP_NONE
+      # this.renderer.copy sprite.texture, nil, addr(dst)
+
+    current2 = epochTime()
+    delta2 = current2 - current1
+    echo delta1, " - ", delta2
 
     this.renderer.present
-    delta = int(getTicks() - this.ticks)
-    remaining = int(16-delta)
-    if remaining<0: remaining = 1
-    GC_step(us = remaining)
+    GC_step(us = 3)
+
+    # if this.showFps: 
+    #   frames += 1
+    #   elapsed = epochTime() - lastTime
+    #   if elapsed > 1.0:
+    #     currentFps = float32(frames) / elapsed
+    #     lastTime = epochTime()
+    #     frames = 0
+    #     fpsString = currentFps.format("02.2f")
+    #     fpsSprite = SpriteFromText(this.renderer, fpsString, this.font, this.fpsFg, this.fpsBg)
+    #     fpsSprite.centered = false
+    #   elif fpsSprite == nil:
+    #     fpsSprite = SpriteFromText(this.renderer, "60.00", this.font, this.fpsFg, this.fpsBg)
+    #     fpsSprite.centered = false
+    #   sprite = fpsSprite
+    #   w = float64(sprite.width) * sprite.scale.x
+    #   h = float64(sprite.height) * sprite.scale.y
+    #   x = if sprite.centered: sprite.x-(int(w/2)) else: sprite.x
+    #   y = if sprite.centered: sprite.y-(int(h/2)) else: sprite.y
+    #   dst = rect(cint(x), cint(y), cint(w), cint(h))
+    #   this.renderer.copy sprite.texture, nil, addr(dst)
+      
+
+    # delta = int(getTicks() - this.ticks)
+    # remaining = int(16-delta)
+    # if remaining<0: remaining = 1
+    # GC_step(us = remaining)
+    # echo this.delta, " ",remaining0
 
   destroy this.renderer
   destroy this.window
   this.cleanup()
-
-##
-## Create a sprite with the current FPS value
-##
-# proc get_fps(this : AbstractGame) : Sprite =
-#   let frametimesindex = this.fpsCount mod this.fpsTimes.len
-#   this.fpsTimes[frametimesindex] = int(this.ticks) - this.fpsTimeLast
-#   this.fpsTimeLast = int(this.ticks)
-#   this.fpsCount += 1
-#   var total:int = 0
-#   for i in 0..14:
-#     total += this.fpsTimes[i]
-#   let value:float64 = 1000.0  / (total / 15)
-#   let s = value.format("02.2f")
-#   this.fpsTickLast = int(this.ticks)
-#   if this.fpsCount mod this.fpsTimes.len == 0 or this.fpsSprite == nil:
-#     this.fpsSprite = SpriteFromText(this.renderer, s, this.font, this.fpsFg, this.fpsBg)
-#     this.fpsSprite.centered = false
-#   return this.fpsSprite
-
-# proc render*(this : AbstractGame) =
-#   ## Render the frame
-#   var dst:Rect
-#   this.renderer.setDrawColor(0, 0, 0, 255)
-#   this.renderer.clear()
-#   for sprite in this.sprites:
-#     #sprite.render(this.renderer)
-#     let w = float64(sprite.width) * sprite.scale.x
-#     let h = float64(sprite.height) * sprite.scale.y
-#     let x1 = if sprite.centered: sprite.x-(int(w/2)) else: sprite.x
-#     let y1 = if sprite.centered: sprite.y-(int(h/2)) else: sprite.y
-#     dst = rect(cint(x1), cint(y1), cint(w), cint(h))
-#     this.renderer.copy sprite.texture, nil, addr(dst)
-#   if this.showFps: this.get_fps().render(this.renderer)
-#   this.renderer.present
 
 method initialize*(this : AbstractGame) =
   ## Abstract method: initialize the game
@@ -285,11 +282,3 @@ proc setText*(this : Sprite, renderer : RendererPtr, text : string, font : FontP
       this.width = textSurface.w
       this.height = textSurface.h
 
-
-# proc render*(this : Sprite, renderer : RendererPtr) =
-#   let w = float64(this.width) * this.scale.x
-#   let h = float64(this.height) * this.scale.y
-#   let x1 = if this.centered: this.x-(int(w/2)) else: this.x
-#   let y1 = if this.centered: this.y-(int(h/2)) else: this.y
-#   var dst = rect(cint(x1), cint(y1), cint(w), cint(h))
-#   renderer.copy this.texture, nil, addr(dst)

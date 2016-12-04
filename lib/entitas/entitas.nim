@@ -240,7 +240,7 @@ proc getComponent*(this: Entity, index : int) : IComponent =
 
 proc getComponents*(this: Entity) : seq[IComponent] =
   if this.componentsCache == nil:
-    this.componentsCache = @[]
+    this.componentsCache = newSeqOfCap[IComponent](MAX_COMPONENTS) #@[]
     for i in 0..this.totalComponents-1:
       if this.components[i] != nil:
         this.componentsCache.add(this.components[i])
@@ -248,7 +248,7 @@ proc getComponents*(this: Entity) : seq[IComponent] =
 
 proc getComponentIndices*(this: Entity) : seq[int] =
   if this.componentIndicesCache == nil:
-    this.componentIndicesCache = @[]
+    this.componentIndicesCache = newSeqOfCap[int](MAX_COMPONENTS) #@[]
     var index = 0
     for i in 0..this.totalComponents-1:
       if this.components[i] != nil:
@@ -279,14 +279,14 @@ proc removeAllComponents*(this: Entity) : void =
 
 proc destroy*(this: Entity) : void =
   this.removeAllComponents()
-  this.componentIndicesCache = @[]
-  this.componentsCache = @[]
+  this.componentIndicesCache = newSeqOfCap[int](MAX_COMPONENTS) #@[]
+  this.componentsCache = newSeqOfCap[IComponent](MAX_COMPONENTS) #@[]
   this.name = ""
   this.isEnabled = false
 
 proc `$`*(this: Entity) : string =
   if this.toStringCache == "":
-    var sb : seq[string] = @[]
+    var sb : seq[string] = newSeqOfCap[string](MAX_COMPONENTS) #@[]
     for index in this.getComponentIndices():
       sb.add $WorldComponentsEnum[index]
     this.toStringCache = this.name & "(" & sb.join(",") & ")"
@@ -311,9 +311,9 @@ proc newMatcher*(): Matcher =
   new(result)
   result.id = MatcherUniqueId
   MatcherUniqueId = MatcherUniqueId+1
-  result.allOfIndices = @[]
-  result.anyOfIndices = @[]
-  result.noneOfIndices = @[]
+  result.allOfIndices = newSeqOfCap[int](MAX_COMPONENTS) #@[]
+  result.anyOfIndices = newSeqOfCap[int](MAX_COMPONENTS) #@[]
+  result.noneOfIndices = newSeqOfCap[int](MAX_COMPONENTS) #@[]
 
 proc indices*(this: Matcher) : seq[int] =
   if this.indicesCache == nil:
@@ -321,14 +321,14 @@ proc indices*(this: Matcher) : seq[int] =
   return this.indicesCache
 
 proc componentsToString(a : seq[int]) : string =
-  var sb : seq[string] = @[]
+  var sb : seq[string] = newSeqOfCap[string](MAX_COMPONENTS) #@[]
   for index in a:
     sb.add $WorldComponentsEnum[index]
   return sb.join(",")
 
 proc `$`*(this : Matcher) : string =
   if this.toStringCache == nil:
-    var sb : seq[string] = @[]
+    var sb : seq[string] = newSeqOfCap[string](MAX_COMPONENTS) #@[]
     if this.allOfIndices.len > 0:
       sb.add "AllOf("
       sb.add componentsToString(this.allOfIndices)
@@ -369,7 +369,7 @@ proc matches*(this: Matcher, entity : Entity) : bool =
   return matchesAllOf and matchesAnyOf and matchesNoneOf
 
 proc MergeIndices(args: seq[Matcher]) : seq[int] =
-  result = @[]
+  result = newSeqOfCap[int](MAX_COMPONENTS) #@[]
   for matcher in args:
     if matcher.indices.len != 1:
       raise newException(OSError, "matcher.indices.length must be 1")
@@ -398,7 +398,7 @@ proc newGroup*(matcher : Matcher): Group =
   result.onAddEntity = initEventHandler("onAddEntity")
   result.onRemoveEntity = initEventHandler("onRemoveEntity")
   result.entities = initTable[int, Entity]()
-  result.entitiesCache = @[]
+  result.entitiesCache = newSeqOfCap[Entity](100) #@[]
   result.matcher = matcher
 
 proc count*(this : Group) : int = return this.entities.len
@@ -450,7 +450,7 @@ proc containsEntity(this : Group, entity : Entity) : bool =
 
 proc getEntities*(this : Group) : seq[Entity] =
   if this.entitiesCache.len == 0:
-    this.entitiesCache = @[]
+    this.entitiesCache = newSeqOfCap[Entity](100) #@[]
     for entity in this.entities.values:
       this.entitiesCache.add entity
 
@@ -470,7 +470,7 @@ proc getSingleEntity*(this : Group) : Entity =
 
 proc `$`*(this : Group) : string =
   if this.toStringCache == nil:
-    var sb : seq[string] = @[]
+    var sb : seq[string] = newSeqOfCap[string](MAX_COMPONENTS) #@[]
     for index in this.matcher.indices:
       sb.add WorldComponentsEnum[index] #.replace("Component", "")
     this.toStringCache =  "Group(" & sb.join(",") & ")"
@@ -500,11 +500,11 @@ proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): Worl
   result.groupsForIndex = initTable[int, seq[Group]]()
   result.reusableEntities = initQueue[Entity]()
   result.retainedEntities = initTable[int, Entity]()
-  result.entitiesCache = @[]
+  result.entitiesCache = newSeqOfCap[Entity](100) #@[]
   result.entities = initTable[int, Entity]()
   result.groups = initTable[int, Group]()
-  result.initializeSystems = @[]
-  result.executeSystems = @[]
+  result.initializeSystems = newSeqOfCap[System](MAX_COMPONENTS) #@[]
+  result.executeSystems = newSeqOfCap[System](MAX_COMPONENTS) #@[]
   WorldComponentsEnum = componentsEnum
   WorldTotalComponents = componentsEnum.len
   WorldInstance = result
@@ -569,7 +569,7 @@ proc getEntities*(this: World, matcher : Matcher) : seq[Entity] =
     return this.getGroup(matcher).getEntities()
   else:
     if this.entitiesCache == nil:
-      this.entitiesCache = @[]
+      this.entitiesCache = newSeqOfCap[Entity](100) #@[]
       for e in this.entities.values:
         this.entitiesCache.add(e)
     return this.entitiesCache
@@ -582,7 +582,7 @@ proc getGroup*(this: World, matcher : Matcher) : Group  =
   else:
     group = newGroup(matcher)
 
-    var entities : seq[Entity] = @[] #this.getEntities(nil)
+    var entities : seq[Entity] = newSeqOfCap[Entity](100) #@[] #this.getEntities(nil)
 
     for entity in this.entities.values:
       group.handleEntitySilently(entity)
@@ -591,7 +591,7 @@ proc getGroup*(this: World, matcher : Matcher) : Group  =
 
     for index in matcher.indices:
       if not this.groupsForIndex.hasKey(index):
-        this.groupsForIndex[index] = @[]
+        this.groupsForIndex[index] = newSeqOfCap[Group](MAX_COMPONENTS) #@[]
       this.groupsForIndex[index].add(group)
 
   return group

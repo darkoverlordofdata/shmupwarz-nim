@@ -4,6 +4,13 @@
     "version": "0.1.0",
     "command": "nim",
     "isShellCommand": true,
-    "args": ["--define:release", "--define:useRealtimeGC", "--out:build/example", "compile", "example/main"],
+    "args": [
+        "--define:release", 
+        "--define:useRealtimeGC", 
+        "--boundChecks:off",
+        "--out:build/example",
+        "compile", 
+        "example/main"
+        ],
     "showOutput": "always"
 }

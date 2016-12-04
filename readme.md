@@ -17,7 +17,19 @@ cd build
 ./example
 
 
+This is on an ASUS i7 with 12 gb. 
+On a Inspiron i3 with 4 gb, the nim version stutters.
 
+profile avg ms per frame:
+
+            nim         fsharp
+    exec - 0.0007       0.00005
+            sdl2        monogame
+    draw - 0.015        0.002
+
+
+Most of each frame is spent in a loop, just drawing an array of textures using SDL2.
+The same loop in FSharp, using MonoGame (SDL2 wrapper) runs 7-8 times faster.
 
 
 # MIT License

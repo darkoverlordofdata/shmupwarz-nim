@@ -374,18 +374,14 @@ method initialize*(this : ViewManagerSystem) =
     ##
     ##  Sort the sprite into the display by layer
     ##
-    this.game.sprites[this.game.eos] = res.sprite
-    this.game.eos += 1
-    # if this.game.eos == 0:
-    #   this.game.sprites[0] = res.sprite
-    #   this.game.eos = 1
-    # else:
-      # for i in 0..this.game.eos-1:
-      #   if ordinal <= this.game.sprites[i].layer:
-      #     this.game.sprites.insert(res.sprite, i)
-      #     return
-      #this.game.sprites.add(res.sprite)
-
+    if this.game.sprites.len == 0:
+      this.game.sprites.add(res.sprite)
+    else:
+      for i in 0..this.game.sprites.len-1:
+        if ordinal <= this.game.sprites[i].layer:
+          this.game.sprites.insert(res.sprite, i)
+          return
+      this.game.sprites.add(res.sprite)
   )
 
 #include systems/RenderPositionSystem
@@ -446,12 +442,9 @@ method initialize*(this : HudRenderSystem) =
   this.totalRetained = this.createText(0, 60, TOTAL_RETAINED & this.world.reusableEntitiesCount.format("d"))
   this.totalReusable = this.createText(0, 80, TOTAL_REUSABLE & this.world.retainedEntitiesCount.format("d"))
 
-  this.game.sprites[this.game.eos] = this.activeEntities
-  this.game.eos += 1
-  this.game.sprites[this.game.eos] = this.totalRetained
-  this.game.eos += 1
-  this.game.sprites[this.game.eos] = this.totalReusable
-  this.game.eos += 1
+  this.game.sprites.add(this.activeEntities)
+  this.game.sprites.add(this.totalRetained)
+  this.game.sprites.add(this.totalReusable)
 
 method execute*(this : HudRenderSystem) =
   this.setText(this.activeEntities, ACTIVE_ENTITIES & this.world.count.format("d"))
@@ -474,13 +467,10 @@ method initialize*(this : DestroySystem) =
   .addHandler(proc(e : EventArgs) =
     let entity = EntityArgs(e).entity
     let sprite = entity.resource.sprite
-    for i in 0..this.game.eos-1:
+    for i in 0..this.game.sprites.len-1:
       let s = this.game.sprites[i]
       if s.id == sprite.id:
-        # this.game.sprites.delete(i)
-        this.game.sprites[i] = this.game.sprites[this.game.eos-1]
-        this.game.sprites[this.game.eos-1] = nil
-        this.game.eos -= 1
+        this.game.sprites.delete(i)
         entity.resource.sprite.texture.destroy()
         entity.resource.sprite = nil
         break
@@ -563,7 +553,7 @@ proc newGame*(name : string, width : cint, height : cint) : Game =
   result.height = height
   result.width = width
   result.running = true
-  #result.sprites = newSeqOfCap[Sprite](1000) #@[]
+  result.sprites = newSeqOfCap[Sprite](1000) #@[]
 ##
 ##  Start the game
 ##

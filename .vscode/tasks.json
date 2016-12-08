@@ -5,6 +5,7 @@
     "command": "nim",
     "isShellCommand": true,
     "args": [
+        "--define:nimDebugDlOpen",
         "--define:release", 
         "--define:useRealtimeGC", 
         "--boundChecks:off",

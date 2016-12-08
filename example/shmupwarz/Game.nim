@@ -513,7 +513,7 @@ method execute*(this : PlayerInputSystem) =
 
   let pos = this.player.position
   if this.mouseDefined:
-    if this.mouseDown or this.game.currentKeyStates[(int)SDL_SCANCODE_Z] == 1:
+    if this.mouseDown or this.game.keys[(int)SDL_SCANCODE_Z] == 1:
       if this.timeToFire <= 0:
         discard this.game.createBullet(pos.x - 27, pos.y + 2)
         discard this.game.createBullet(pos.x + 27, pos.y + 2)

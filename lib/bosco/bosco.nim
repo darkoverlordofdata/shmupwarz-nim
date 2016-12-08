@@ -8,6 +8,7 @@ import algorithm, future
 
 const FONT_PATH = "res/fonts/skranji.regular.ttf"
 const FONT_SIZE = 16
+const FPS = 1/60
 var SpriteUniqueId : int = 0
 
 type
@@ -105,6 +106,9 @@ method start*(this : AbstractGame) =
   var currentTime = 0.0
   var currentFps = 0.0
   var frames = 0
+  var t1 = 0.0
+  var t2 = 0.0
+  var ms = 0
 
 
   ## Start the game
@@ -115,6 +119,9 @@ method start*(this : AbstractGame) =
   GC_disable()
   currentTime = epochTime()
   while this.running:
+
+    t1 = epochTime()
+
     while pollEvent(evt):
       case evt.kind
         of QuitEvent:
@@ -127,6 +134,14 @@ method start*(this : AbstractGame) =
     currentTime = epochTime()
     this.delta = currentTime - lastTime
     this.update(this.delta)
+
+    t2 = epochTime()
+    ms = int((FPS - (t2-t1))*1000)
+    if ms < 1: 
+      ms = 1
+    if ms > 10: 
+      ms = 10
+    GC_step(us = ms)
 
     this.renderer.setDrawColor(0, 0, 0, 255)
     this.renderer.clear()
@@ -160,7 +175,6 @@ method start*(this : AbstractGame) =
       dst = rect(cint(x), cint(y), cint(w), cint(h))
       this.renderer.copy sprite.texture, nil, addr(dst)
       
-    GC_step(us = 5)
     this.renderer.present
 
   destroy this.renderer

@@ -4,6 +4,7 @@ import sdl2/ttf
 import strfmt
 import os
 import times
+import algorithm, future
 
 const FONT_PATH = "res/fonts/skranji.regular.ttf"
 const FONT_SIZE = 16
@@ -36,19 +37,11 @@ type
     window* : WindowPtr
     renderer* : RendererPtr
     font* : FontPtr
-    # sprites* : seq[Sprite]
-    sprites* : array[0..100, Sprite]
+    sprites* : seq[Sprite]
     eos* : int
     currentKeyStates* : ptr array[0..512, uint8]
     delta* : float64
-    #ticks* : uint32
-    #lastTick : uint32
     showFps : bool
-    # fpsTimes : array[0..14, int]
-    # fpsTimeLast : int
-    # fpsCount : int
-    # fpsTickLast : int
-    # fpsSprite : Sprite
     fpsBg : Color
     fpsFg : Color
     fpsSrcRect : Rect
@@ -92,7 +85,6 @@ proc init_sdl(this : AbstractGame) =
 
   ## setup for FPS display
   this.showFps = true
-  # this.fpsTimes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
   this.fpsFg.r = 255
   this.fpsFg.g = 255
   this.fpsFg.b = 255
@@ -107,14 +99,12 @@ proc init_sdl(this : AbstractGame) =
 
 
 method start*(this : AbstractGame) =
-  var delta = 0
   var dst:Rect
   var w = 0.0
   var h = 0.0
   var x = 0
   var y = 0
   var i = 0
-  var l = 0
   var sprite:Sprite
   var fpsSprite:Sprite
   var fpsString = ""
@@ -123,13 +113,6 @@ method start*(this : AbstractGame) =
   var currentTime = 0.0
   var currentFps = 0.0
   var frames = 0
-
-  var remaining0:float
-  var remaining1:float
-  var current1:float
-  var delta1:float
-  var current2:float
-  var delta2:float
 
 
   ## Start the game
@@ -151,64 +134,42 @@ method start*(this : AbstractGame) =
     lastTime = currentTime
     currentTime = epochTime()
     this.delta = currentTime - lastTime
-    remaining0 = FPS - this.delta
     this.update(this.delta)
-
-    current1 = epochTime()
-    delta1 = current1 - currentTime
 
     this.renderer.setDrawColor(0, 0, 0, 255)
     this.renderer.clear()
 
-    i = 0
-    l = this.eos #sprites.len
-    
-    while i < l:
-      sprite = this.sprites[i]
-      i += 1
-    # for sprite in this.sprites:
+    for sprite in this.sprites:
       w = float64(sprite.width) * sprite.scale.x
       h = float64(sprite.height) * sprite.scale.y
       x = if sprite.centered: sprite.x-(int(w/2)) else: sprite.x
       y = if sprite.centered: sprite.y-(int(h/2)) else: sprite.y
       dst = rect(cint(x), cint(y), cint(w), cint(h))
-      this.renderer.copyEx sprite.texture, nil, addr(dst), 0, nil, SDL_FLIP_NONE
-      # this.renderer.copy sprite.texture, nil, addr(dst)
+      this.renderer.copy sprite.texture, nil, addr(dst)
 
-    current2 = epochTime()
-    delta2 = current2 - current1
-    echo delta1, " - ", delta2
-
-    this.renderer.present
-    GC_step(us = 3)
-
-    # if this.showFps: 
-    #   frames += 1
-    #   elapsed = epochTime() - lastTime
-    #   if elapsed > 1.0:
-    #     currentFps = float32(frames) / elapsed
-    #     lastTime = epochTime()
-    #     frames = 0
-    #     fpsString = currentFps.format("02.2f")
-    #     fpsSprite = SpriteFromText(this.renderer, fpsString, this.font, this.fpsFg, this.fpsBg)
-    #     fpsSprite.centered = false
-    #   elif fpsSprite == nil:
-    #     fpsSprite = SpriteFromText(this.renderer, "60.00", this.font, this.fpsFg, this.fpsBg)
-    #     fpsSprite.centered = false
-    #   sprite = fpsSprite
-    #   w = float64(sprite.width) * sprite.scale.x
-    #   h = float64(sprite.height) * sprite.scale.y
-    #   x = if sprite.centered: sprite.x-(int(w/2)) else: sprite.x
-    #   y = if sprite.centered: sprite.y-(int(h/2)) else: sprite.y
-    #   dst = rect(cint(x), cint(y), cint(w), cint(h))
-    #   this.renderer.copy sprite.texture, nil, addr(dst)
+    if this.showFps: 
+      frames += 1
+      elapsed = elapsed + this.delta
+      if elapsed > 1.0:
+        currentFps = float32(frames) / elapsed
+        elapsed = 0.0
+        frames = 0
+        fpsString = currentFps.format("02.2f")
+        fpsSprite = SpriteFromText(this.renderer, fpsString, this.font, this.fpsFg, this.fpsBg)
+        fpsSprite.centered = false
+      elif fpsSprite == nil:
+        fpsSprite = SpriteFromText(this.renderer, "60.00", this.font, this.fpsFg, this.fpsBg)
+        fpsSprite.centered = false
+      sprite = fpsSprite
+      w = float64(sprite.width) * sprite.scale.x
+      h = float64(sprite.height) * sprite.scale.y
+      x = if sprite.centered: sprite.x-(int(w/2)) else: sprite.x
+      y = if sprite.centered: sprite.y-(int(h/2)) else: sprite.y
+      dst = rect(cint(x), cint(y), cint(w), cint(h))
+      this.renderer.copy sprite.texture, nil, addr(dst)
       
-
-    # delta = int(getTicks() - this.ticks)
-    # remaining = int(16-delta)
-    # if remaining<0: remaining = 1
-    # GC_step(us = remaining)
-    # echo this.delta, " ",remaining0
+    GC_step(us = 5)
+    this.renderer.present
 
   destroy this.renderer
   destroy this.window

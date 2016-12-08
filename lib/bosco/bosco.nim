@@ -8,44 +8,40 @@ import algorithm, future
 
 const FONT_PATH = "res/fonts/skranji.regular.ttf"
 const FONT_SIZE = 16
-const FPS = 1/60
-var
-  SpriteUniqueId : int = 0
+var SpriteUniqueId : int = 0
 
 type
   Vector2* = object of RootObj
-    x* : float64
-    y* : float64
+    x*        : float64
+    y*        : float64
 
   Sprite* = ref object of RootObj
-    texture* : TexturePtr
-    x* : int
-    y* : int
-    width* : int
-    height* : int
-    scale* : Vector2
+    texture*  : TexturePtr
+    x*        : int
+    y*        : int
+    width*    : int
+    height*   : int
+    scale*    : Vector2
     centered* : bool
-    layer* : int
-    id* : int
-    path* : string
+    layer*    : int
+    id*       : int
+    path*     : string
 
   AbstractGame* = ref object of RootObj
-    name* : string
-    width* : cint
-    height* : cint
-    running* : bool
-    window* : WindowPtr
+    name*     : string
+    width*    : cint
+    height*   : cint
+    running*  : bool
+    window*   : WindowPtr
     renderer* : RendererPtr
-    font* : FontPtr
-    sprites* : seq[Sprite]
-    eos* : int
-    currentKeyStates* : ptr array[0..512, uint8]
-    delta* : float64
-    showFps : bool
-    fpsBg : Color
-    fpsFg : Color
-    fpsSrcRect : Rect
-    fpsDstRect : Rect
+    font*     : FontPtr
+    sprites*  : seq[Sprite]
+    eos*      : int
+    keys*     : ptr array[0..512, uint8]
+    delta*    : float64
+    showFps   : bool
+    fpsBg     : Color
+    fpsFg     : Color
     lastCount : int
 
 
@@ -93,9 +89,6 @@ proc init_sdl(this : AbstractGame) =
   this.fpsBg.g = 0
   this.fpsBg.b = 0
   this.fpsBg.a = 0
-  let su = this.font.renderText("fps: 99.99", this.fpsFg, this.fpsBg)
-  this.fpsSrcRect = rect(0, 0, (cint)su.w, (cint)su.h)
-  this.fpsDstRect = rect(0, 0, (cint)su.w, (cint)su.h)
 
 
 method start*(this : AbstractGame) =
@@ -104,7 +97,6 @@ method start*(this : AbstractGame) =
   var h = 0.0
   var x = 0
   var y = 0
-  var i = 0
   var sprite:Sprite
   var fpsSprite:Sprite
   var fpsString = ""
@@ -118,7 +110,7 @@ method start*(this : AbstractGame) =
   ## Start the game
   this.init_sdl()
   this.initialize()
-  this.currentKeyStates = getKeyboardState(nil)
+  this.keys = getKeyboardState(nil)
   var evt = defaultEvent
   GC_disable()
   currentTime = epochTime()
@@ -128,7 +120,7 @@ method start*(this : AbstractGame) =
         of QuitEvent:
           this.running = false
         else: this.event(evt)
-    if (bool) this.currentKeyStates[41] : this.running = false
+    if (bool) this.keys[41] : this.running = false
 
 
     lastTime = currentTime

@@ -1,1 +1,3 @@
 # Entitas
+
+Entity Component System

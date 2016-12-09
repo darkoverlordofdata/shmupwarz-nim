@@ -1,1 +1,3 @@
 # Bosco 
+
+Game container & utilities

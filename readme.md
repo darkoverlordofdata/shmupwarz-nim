@@ -1,4 +1,5 @@
-# Schmup Warz
+# The Shmup Warriors of NIM
+
 
 One more time, with Nim!
 
@@ -13,12 +14,21 @@ nimble install
 cd ../..
 entitas generate --platform nim
 nim --define:release --out:build/example compile example/main
+cp  -rf example/res build
 cd build
 ./example
 
-to correctly interprate the apparent render time:
-
+Stuttering fixed, thanks to this for comfirming what I was beginning to suspect:
 http://devcry.heiho.net/html/2015/20150211-rock-solid-frame-rates.html
+
+Once you start drawing, you don't want to do anything else in that frame. 
+Draw time will expand to fill all remaining time. So the new bosco game loop flow is:
+
+events
+update
+gc
+(sleep)
+draw
 
 
 

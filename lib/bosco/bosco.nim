@@ -4,7 +4,8 @@ import sdl2/ttf
 import strfmt
 import os
 import times
-import algorithm, future
+import algorithm
+import future
 
 const FONT_PATH = "res/fonts/skranji.regular.ttf"
 const FONT_SIZE = 16
@@ -37,7 +38,6 @@ type
     renderer* : RendererPtr
     font*     : FontPtr
     sprites*  : seq[Sprite]
-    eos*      : int
     keys*     : ptr array[0..512, uint8]
     delta*    : float64
     showFps   : bool
@@ -73,6 +73,7 @@ proc init_sdl(this : AbstractGame) =
   if this.renderer == nil:
       echo "Error creating SDL_Renderer: ", getError()
       quit 1
+
   this.renderer.setDrawColor(0xff, 0xff, 0xff, 0xff)
 
   this.font = ttf.openFont(FONT_PATH, FONT_SIZE)
@@ -142,6 +143,7 @@ method start*(this : AbstractGame) =
     if ms > 10: 
       ms = 10
     GC_step(us = ms)
+    sleep(1)
 
     this.renderer.setDrawColor(0, 0, 0, 255)
     this.renderer.clear()

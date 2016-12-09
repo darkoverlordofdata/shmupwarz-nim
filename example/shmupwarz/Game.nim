@@ -1,3 +1,8 @@
+##
+##
+## The Shmup Warriors of NIM
+##
+##
 import events
 import sdl2
 import sdl2/image
@@ -12,14 +17,15 @@ import EntitasExtensions
 const Tau : float64 = 2 * math.PI
 var empty:Sprite
 
-
 type
   Game* = ref object of AbstractGame
+    ## The game implementation
     world* : World
     input* : PlayerInputSystem
     player*: Entity
 
   PlayerInputSystem* = ref object of System
+    ## Process player input
     game* : Game
     group* : Group
     player : Entity
@@ -28,37 +34,45 @@ type
     timeToFire : float64
 
   MovementSystem* = ref object of System
+    ## Process movement
     game* : Game
     group* : Group
 
   CollisionSystem* = ref object of System
+    ## Process collisions
     game* : Game
     bullets* : Group
     enemies*: Group
 
   EntitySpawningTimerSystem* = ref object of System
+    ## Generate new enemies
     game* : Game
     timer1* : float64
     timer2* : float64
     timer3* : float64
 
   ScaleAnimationSystem* = ref object of System
+    ## Tweening for explosions
     game* : Game
     group* : Group
 
   ExpiringSystem* = ref object of System
+    ## Timed expiration 
     game* : Game
     group* : Group
 
   ViewManagerSystem* = ref object of System
+    ## Manage texture display
     game* : Game
     group* : Group
 
   RenderPositionSystem* = ref object of System
+    ## Set the texture position
     game* : Game
     group* : Group
 
   HudRenderSystem* = ref object of System
+    ## Display info
     game* : Game
     group* : Group
     font : FontPtr
@@ -69,14 +83,17 @@ type
     totalReusable : Sprite
 
   DestroySystem* = ref object of System
+    ## Destroy entities
     game* : Game
     group* : Group
     
   RemoveOffscreenShipsSystem* = ref object of System
+    ## Remove enemies when they leave the screen
     game* : Game
     group* : Group
 
   ZOrder* {.pure.} = enum
+    ## Display order
     DEFAULT
     BACKGROUND
     TEXT
@@ -91,17 +108,18 @@ type
     HUD
 
   Effect* {.pure.} = enum
+    ## Sound Effect
     PEW
     ASPLODE
     SMALLASPLODE
 
   EnemyShip* {.pure.} = enum
+    ## Enemy type
     Enemy1
     Enemy2
     Enemy3
 
 {.warning[LockLevel]:off.}
-#import systems/EntityFactory
 proc createBackground*(this : Game) : Entity =
   return this.world.createEntity("background")
   .addPosition(0, 0)
@@ -194,7 +212,6 @@ proc createEnemy3(this : Game) : Entity =
   .addPosition(x, y)
   .addResource("res/images/enemy3.png", empty, true)
 
-#include systems/MovementSystem
 ##
 ## Create new MovementSystem
 ##
@@ -216,7 +233,6 @@ method execute*(this : MovementSystem) =
     entity.position.x += (entity.velocity.x * this.game.delta)
     entity.position.y += (entity.velocity.y * this.game.delta)
 
-#include systems/CollisionSystem
 ##
 ## Create new CollisionSystem
 ##
@@ -258,7 +274,6 @@ method execute*(this : CollisionSystem) =
           discard this.game.createExplosion(position.x, position.y, 0.5)
         break
 
-#include systems/EntitySpawningTimerSystem
 ##
 ## Create new EntitySpawningTimerSystem
 ##
@@ -291,7 +306,6 @@ method execute*(this : EntitySpawningTimerSystem) =
   this.timer3 = this.spawnEnemy(this.timer3, EnemyShip.Enemy3)
 
 
-#include systems/ScaleAnimationSystem
 ##
 ## Create new ScaleAnimationSystem
 ##
@@ -321,7 +335,6 @@ method execute*(this : ScaleAnimationSystem) =
         res.sprite.scale.y = scaleAnimation.min
         scaleAnimation.active = false
 
-#include systems/ExpiringSystem
 ##
 ## Create new ExpiringSystem
 ##
@@ -339,7 +352,6 @@ method execute*(this : ExpiringSystem) =
       discard entity.setDestroy(true)
 
 
-#include systems/ViewManagerSystem
 ##
 ## Create new ViewManagerSystem
 ##
@@ -386,7 +398,6 @@ method initialize*(this : ViewManagerSystem) =
 
   )
 
-#include systems/RenderPositionSystem
 ##
 ## Create new RenderPositionSystem
 ##
@@ -411,7 +422,6 @@ method execute*(this : RenderPositionSystem) =
     res.sprite.y = (int)pos.y
 
 
-#include systems/HudRenderSystem
 ##
 ## Create new HudRenderSystem
 ##
@@ -453,7 +463,6 @@ method execute*(this : HudRenderSystem) =
   this.setText(this.totalRetained, TOTAL_RETAINED & this.world.reusableEntitiesCount.format("d"))
   this.setText(this.totalReusable, TOTAL_REUSABLE & this.world.retainedEntitiesCount.format("d"))
 
-#include systems/DestroySystem
 ##
 ## Create new DestroySystem
 ##
@@ -479,7 +488,6 @@ method initialize*(this : DestroySystem) =
 
   )
 
-#include systems/RemoveOffscreenShipsSystem
 ##
 ## Create new RemoveOffscreenShipsSystem
 ##
@@ -497,7 +505,6 @@ method execute*(this : RemoveOffscreenShipsSystem) =
         discard entity.setDestroy(true)
 
 
-#include systems/PlayerInputSystem
 proc newPlayerInputSystem*(game : Game) : PlayerInputSystem =
   new(result)
   result.game = game
@@ -544,7 +551,6 @@ proc onMouseEvent(this : PlayerInputSystem, e : EventType, x : int, y : int) =
     this.mouseDown = false
   else : return #this.mouseDefined = false
 
-#include systems/GameMethods
 ##
 ## new Game constructor
 ##

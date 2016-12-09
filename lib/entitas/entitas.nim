@@ -97,7 +97,6 @@ proc newEntityArgs*(entity : Entity, index : int, component : IComponent): Entit
   result.index = index
   result.component = component
 
-#include ecs/Entity
 ##
 ## Entity - method forward declarations
 ##
@@ -303,7 +302,6 @@ proc release(this: Entity) : void =
     raise newException(OSError, "EntityIsAlreadyReleasedException")
   return
 
-#include ecs/Matcher
 ##
 ##  constructor
 ##
@@ -389,7 +387,6 @@ proc MatchAnyOf*(args : seq[int]) : Matcher =
   result = newMatcher()
   result.anyOfIndices = deduplicate(args)
 
-#include ecs/Group
 ##
 ##  constructor
 ##
@@ -476,7 +473,6 @@ proc `$`*(this : Group) : string =
     this.toStringCache =  "Group(" & sb.join(",") & ")"
   return this.toStringCache
 
-#include ecs/System
 ##
 ## System - methods
 ##
@@ -488,7 +484,6 @@ method initialize*(this : System) : void {.base.} =
 method execute*(this : System) : void {.base.} =
   return
 
-#include ecs/World
 ##
 ##  constructor
 ##
@@ -515,6 +510,7 @@ proc reusableEntitiesCount*(this : World) : int = this.reusableEntities.len
 proc retainedEntitiesCount*(this : World) : int = this.retainedEntities.len
 
 proc onEntityReleased*(this: World, entity : Entity) : void  =
+  ## Event: all references to the entity have been released
   if entity.isEnabled:
     raise newException(OSError, "EntityIsNotDestroyedException -Cannot release entity.")
 
@@ -523,6 +519,7 @@ proc onEntityReleased*(this: World, entity : Entity) : void  =
   #this.reusableEntities.enqueue(entity)
 
 proc onEntityChanged*(this: World, entity : Entity, index : int, component : IComponent) : void =
+  ## Event: entity has been changed
   if this.groupsForIndex.hasKey(index):
     let groups = this.groupsForIndex[index]
     if groups != nil:
@@ -582,7 +579,7 @@ proc getGroup*(this: World, matcher : Matcher) : Group  =
   else:
     group = newGroup(matcher)
 
-    var entities : seq[Entity] = newSeqOfCap[Entity](100) #@[] #this.getEntities(nil)
+    #var entities : seq[Entity] = newSeqOfCap[Entity](100) #@[] #this.getEntities(nil)
 
     for entity in this.entities.values:
       group.handleEntitySilently(entity)

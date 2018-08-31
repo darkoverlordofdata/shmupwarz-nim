@@ -3,9 +3,9 @@
     "configurations": [
         {
             "name": "Debug",
-            "type": "lldb",
+            "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/build/example",
+            "program": "${workspaceRoot}/build/example.exe",
             "cwd": "${workspaceRoot}/build",
             "args": []
         }

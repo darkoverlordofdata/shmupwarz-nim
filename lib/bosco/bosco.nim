@@ -44,6 +44,7 @@ type
     fpsBg     : Color
     fpsFg     : Color
     lastCount : int
+    eos*      : int
 
 
 proc SpriteFromFile*(renderer : RendererPtr, path : string): Sprite

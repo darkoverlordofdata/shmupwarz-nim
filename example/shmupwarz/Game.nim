@@ -19,7 +19,7 @@ var empty:Sprite
 
 type
   Game* = ref object of AbstractGame
-    ## The game implementation
+    #[ The game implementation ]#
     world* : World
     input* : PlayerInputSystem
     player*: Entity

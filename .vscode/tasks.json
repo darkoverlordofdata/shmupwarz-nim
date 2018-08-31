@@ -10,6 +10,7 @@
         "--define:useRealtimeGC", 
         "--boundChecks:off",
         "--out:build/example",
+        "--app:gui",
         "compile", 
         "example/main"
         ],

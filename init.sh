@@ -1,0 +1,1 @@
+nim --define:nimDebugDOpen --define:release --define:useRealtimeGC --define:boundChecks:off --out:build/example compile example/main

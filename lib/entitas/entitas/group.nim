@@ -33,21 +33,21 @@ proc count*(this : Group) : int = return this.entities.len
 proc addEntitySilently(this : Group, entity : Entity): void =
   if not this.entities.hasKey(entity.id):
     this.entities[entity.id] = entity
-    this.entitiesCache = nil
+    this.entitiesCache = @[]
     this.singleEntityCache = nil
     entity.addRef()
 
 proc removeEntitySilently(this : Group, entity : Entity): void =
   if this.entities.hasKey(entity.id):
     this.entities.del(entity.id)
-    this.entitiesCache = nil
+    this.entitiesCache = @[]
     this.singleEntityCache = nil
     entity.release()
 
 proc addEntity(this : Group, entity : Entity, index : int, component : IComponent): void =
   if not this.entities.hasKey(entity.id):
     this.entities[entity.id] = entity
-    this.entitiesCache = nil
+    this.entitiesCache = @[]
     this.singleEntityCache = nil
     entity.addRef()
     entitas.EventEmitter.emit(this.onAddEntity, newEntityArgs(entity, index, component))
@@ -55,7 +55,7 @@ proc addEntity(this : Group, entity : Entity, index : int, component : IComponen
 proc removeEntity(this : Group, entity : Entity, index : int, component : IComponent): void =
   if this.entities.hasKey(entity.id):
     this.entities.del(entity.id)
-    this.entitiesCache = nil
+    this.entitiesCache = @[]
     this.singleEntityCache = nil
     entity.release()
     entitas.EventEmitter.emit(this.onRemoveEntity, newEntityArgs(entity, index, component))
@@ -96,7 +96,7 @@ proc getSingleEntity*(this : Group) : Entity =
   return this.singleEntityCache
 
 proc `$`*(this : Group) : string =
-  if this.toStringCache == nil:
+  if this.toStringCache.len() == 0:
     var sb : seq[string] = newSeqOfCap[string](MAX_COMPONENTS) #@[]
     for index in this.matcher.indices:
       sb.add WorldComponentsEnum[index] #.replace("Component", "")

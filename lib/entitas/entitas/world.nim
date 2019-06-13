@@ -1,5 +1,5 @@
 import tables
-import queues
+import deques
 import nuuid
 import entitas
 
@@ -19,7 +19,7 @@ type
     initializeSystems     : seq[System]
     name*                 : string
     retainedEntities      : Table[int,Entity]
-    reusableEntities      : Queue[Entity]
+    reusableEntities      : Deque[Entity]
     totalComponents*      : int
 
   System* = ref object of RootObj
@@ -51,7 +51,7 @@ proc newWorld*(componentsEnum : seq[string], startCreationIndex : int = 0): Worl
   result.totalComponents = componentsEnum.len
   result.creationIndex = startCreationIndex
   result.groupsForIndex = initTable[int, seq[Group]]()
-  result.reusableEntities = initQueue[Entity]()
+  result.reusableEntities = initDeque[Entity]()
   result.retainedEntities = initTable[int, Entity]()
   result.entitiesCache = newSeqOfCap[Entity](100) #@[]
   result.entities = initTable[int, Entity]()
@@ -80,7 +80,7 @@ proc onEntityChanged*(this: World, entity : Entity, index : int, component : ICo
   ## Event: entity has been changed
   if this.groupsForIndex.hasKey(index):
     let groups = this.groupsForIndex[index]
-    if groups != nil:
+    if groups.len() != 0:
       for group in groups:
         group.handleEntity(entity, index, component)
 
@@ -89,10 +89,10 @@ proc destroyEntity*(this: World, entity : Entity): void =
     raise newException(OSError, "WorldDoesNotContainEntityException - Could not destroy entity!")
 
   this.entities.del(entity.id)
-  this.entitiesCache = nil
+  this.entitiesCache = @[]
   entity.destroy()
   if entity.refCount == 1:
-    this.reusableEntities.enqueue(entity)
+    this.reusableEntities.addFirst(entity)
   else:
     this.retainedEntities[entity.id] = entity
   entity.release()
@@ -108,7 +108,7 @@ proc createEntity*(this: World, name : string): Entity =
 
   let entity =
     if this.reusableEntities.len > 0 :
-      this.reusableEntities.dequeue()
+      this.reusableEntities.popFirst()
       #entity = newEntity(this.totalComponents)
     else :
       newEntity(this.totalComponents)
@@ -116,14 +116,14 @@ proc createEntity*(this: World, name : string): Entity =
   this.creationIndex+=1
   entity.initialize(this, name, generateUUID(), this.creationIndex)
   this.entities[entity.id] = entity
-  this.entitiesCache = nil
+  this.entitiesCache = @[]
   return entity
 
 proc getEntities*(this: World, matcher : Matcher) : seq[Entity] =
   if matcher != nil:
     return this.getGroup(matcher).getEntities()
   else:
-    if this.entitiesCache == nil:
+    if this.entitiesCache.len() == 0:
       this.entitiesCache = newSeqOfCap[Entity](100) #@[]
       for e in this.entities.values:
         this.entitiesCache.add(e)

@@ -27,7 +27,7 @@ proc newMatcher*(): Matcher =
   result.noneOfIndices = newSeqOfCap[int](MAX_COMPONENTS) #@[]
 
 proc indices*(this: Matcher) : seq[int] =
-  if this.indicesCache == nil:
+  if this.indicesCache.len() == 0:
     this.indicesCache = deduplicate(concat(this.allOfIndices, this.anyOfIndices, this.noneOfIndices))
   return this.indicesCache
 
@@ -38,7 +38,7 @@ proc componentsToString(a : seq[int]) : string =
   return sb.join(",")
 
 proc `$`*(this : Matcher) : string =
-  if this.toStringCache == nil:
+  if this.toStringCache.len() == 0:
     var sb : seq[string] = newSeqOfCap[string](MAX_COMPONENTS) #@[]
     if this.allOfIndices.len > 0:
       sb.add "AllOf("
@@ -63,13 +63,13 @@ proc `$`*(this : Matcher) : string =
 proc anyOf*(this: Matcher, args : seq[int]) : Matcher =
   ## Matches anyOf the components/indices specified
   this.anyOfIndices = deduplicate(args)
-  this.indicesCache = nil
+  this.indicesCache = @[]
   return this
 
 proc noneOf*(this: Matcher, args : seq[int]) : Matcher =
   ## Matches noneOf the components/indices specified
   this.noneOfIndices = deduplicate(args)
-  this.indicesCache = nil
+  this.indicesCache = @[]
   return this
 
 proc matches*(this: Matcher, entity : Entity) : bool =

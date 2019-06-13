@@ -31,7 +31,7 @@ proc spawnEnemy*(this : EntitySpawningTimerSystem, t : float64, enemy : EnemyShi
     of EnemyShip.Enemy3:
       discard this.game.createEnemy3()
       result = 12.0
-    else: result = 0
+    # else: result = 0
   else: result = delta
 
 method execute*(this : EntitySpawningTimerSystem) =

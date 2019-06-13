@@ -13,7 +13,7 @@ cd bosco
 nimble install
 cd ../..
 entitas generate --platform nim
-nim --define:release --out:build/example compile example/main
+nim --define:release --define:useRealtimeGC --out:build/example compile example/main 
 cp  -rf example/res build
 cd build
 ./example
@@ -30,6 +30,7 @@ gc
 (sleep)
 draw
 
+upgraded to nim 0.20 in preparation for 1.0!
 
 
 # MIT License

@@ -67,8 +67,8 @@ proc addComponent*(this: Entity, index : int, component : IComponent) : Entity =
     raise newException(OSError, "EntityAlreadyHasComponentException - Cannot add ${WorldComponentsEnum[index]} at index ${index}")
     
   this.components[index] = component
-  this.componentsCache = nil
-  this.componentIndicesCache = nil
+  this.componentsCache = @[] #nil
+  this.componentIndicesCache = @[] #nil
   this.toStringCache = ""
   raiseEntityChanged(this, this.owner, index, component)
   return this
@@ -77,10 +77,10 @@ proc ReplaceComponent(this: Entity, index : int, replacement : IComponent) : voi
   let previousComponent = this.components[index]
   if previousComponent != replacement:
     this.components[index] = replacement
-    this.componentsCache = nil
+    this.componentsCache = @[] #nil
     if replacement == nil:
         this.components[index] = nil
-        this.componentIndicesCache = nil
+        this.componentIndicesCache = @[] #nil
         this.toStringCache = ""
         raiseEntityChanged(this, this.owner, index, previousComponent)
 
@@ -113,7 +113,7 @@ proc getComponent*(this: Entity, index : int) : IComponent =
   return this.components[index]
 
 proc getComponents*(this: Entity) : seq[IComponent] =
-  if this.componentsCache == nil:
+  if this.componentsCache.len() == 0:
     this.componentsCache = newSeqOfCap[IComponent](MAX_COMPONENTS) #@[]
     for i in 0..this.totalComponents-1:
       if this.components[i] != nil:
@@ -121,7 +121,7 @@ proc getComponents*(this: Entity) : seq[IComponent] =
   return this.componentsCache
 
 proc getComponentIndices*(this: Entity) : seq[int] =
-  if this.componentIndicesCache == nil:
+  if this.componentIndicesCache.len() == 0:
     this.componentIndicesCache = newSeqOfCap[int](MAX_COMPONENTS) #@[]
     var index = 0
     for i in 0..this.totalComponents-1:

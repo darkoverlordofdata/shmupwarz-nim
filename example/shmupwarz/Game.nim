@@ -3,7 +3,7 @@
 ## The Shmup Warriors of NIM
 ##
 ##
-import queues
+# import queues # deprecated. use deques
 import gamestate
 import movementsystem, collisionsystem, entityspawningtimersystem,
   scaleanimationsystem, expiringsystem, viewmanagersystem, renderpositionsystem,

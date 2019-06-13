@@ -1,5 +1,5 @@
 import tables
-import queues
+import deques
 import events
 
 const MAX_COMPONENTS* = 31
